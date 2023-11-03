@@ -17,7 +17,7 @@ export default async function Home() {
         {hasSubjects ? (
           subjects.map((subject) => <h2 key={subject.id}>{subject.title}</h2>)
         ) : (
-          <h2>You haven't created any subjects yet</h2>
+          <h2>You haven&apos;t created any subjects yet</h2>
         )}
       </div>
     </main>
