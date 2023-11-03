@@ -1,13 +1,11 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
+  provider          = "postgresql"
+  url               = env("POSTGRES_URL")
+  shadowDatabaseUrl = env("POSTGRES_PRISMA_URL")
 }
 
 model Account {
@@ -51,7 +49,6 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  // subjects      Subject[]
   @@map("user")
 }
 
@@ -71,13 +68,11 @@ model Subject {
   id          Int      @id @default(autoincrement())
   title       String   @unique
   description String?
-  imageUrl    String?  @map("image_url")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  imageUrl    String?  @map("image_url")
   decks       Deck[]
 
-  // userId String
-  // user   User   @relation(fields: [userId], references: [id])
   @@map("subject")
 }
 
@@ -88,9 +83,9 @@ model Deck {
   imageUrl    String?  @map("image_url")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  subject     Subject  @relation(fields: [subjectId], references: [id])
   subjectId   Int      @map("subject_id")
   cards       Card[]
+  subject     Subject  @relation(fields: [subjectId], references: [id])
 
   @@map("deck")
 }
@@ -99,22 +94,15 @@ model Card {
   id            Int            @id @default(autoincrement())
   question      String         @db.VarChar(255)
   questionType  QuestionType   @map("question_type")
-  deck          Deck           @relation(fields: [deckId], references: [id])
   deckId        Int            @map("deck_id")
   imageUrl      String?        @map("image_url")
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   answers       Answer[]
+  deck          Deck           @relation(fields: [deckId], references: [id])
   correctAnswer CorrectAnswer?
 
   @@map("card")
-}
-
-enum QuestionType {
-  MC
-  TF
-
-  @@map("question_type")
 }
 
 model Answer {
@@ -128,11 +116,18 @@ model Answer {
 }
 
 model CorrectAnswer {
-  card     Card   @relation(fields: [cardId], references: [id])
   cardId   Int    @unique @map("card_id")
-  answer   Answer @relation(fields: [answerId], references: [id])
   answerId Int    @unique @map("answer_id")
+  answer   Answer @relation(fields: [answerId], references: [id])
+  card     Card   @relation(fields: [cardId], references: [id])
 
   @@unique([cardId, answerId])
   @@map("correct_answer")
+}
+
+enum QuestionType {
+  MC
+  TF
+
+  @@map("question_type")
 }
