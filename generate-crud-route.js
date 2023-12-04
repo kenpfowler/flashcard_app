@@ -21,14 +21,21 @@ const HTTP_METHODS = [
 // If an unsupported method is called, Next.js will return a 405 Method Not Allowed response.
 
 const generateRouteHandlers = (folderPath) => {
-  let pageContent = `
-  import { NextRequest, NextResponse } from "next/server";
-  `;
+  let pageContent = `import { NextRequest, NextResponse } from "next/server";`;
 
   HTTP_METHODS.forEach((method) => {
     pageContent =
       pageContent +
-      `export async function ${method}(req: NextRequest, res: NextResponse) {}\n`;
+      `export async function ${method}(req: NextRequest, res: NextResponse) {
+        try {
+          return NextResponse.json(res);
+        } catch (error) {
+          return NextResponse.json(
+            JSON.stringify({ message: "failure", success: false })
+          );
+        }      
+      }
+      `;
   });
 
   // TODO: figure out how to generate boilerplate for a route
