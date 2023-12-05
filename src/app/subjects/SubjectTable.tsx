@@ -13,7 +13,7 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    const res = await fetch("/api/subject/", {
+    const res = await fetch("/api/subjects/", {
       method: "DELETE",
       body: JSON.stringify({ id }),
     });

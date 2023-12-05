@@ -68,7 +68,7 @@ export function UpdateSubjectForm({
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/subject").patch(body);
+      const res = await api.url("/api/subjects").patch(body);
       setIsFetching(false);
       router.refresh();
       console.log(res);

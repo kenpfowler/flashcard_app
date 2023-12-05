@@ -50,7 +50,7 @@ export function CreateSubjectForm() {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/subject").post(body);
+      const res = await api.url("/api/subjects").post(body);
       console.log(res);
       setIsFetching(false);
       form.reset();
