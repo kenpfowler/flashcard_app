@@ -1,11 +1,10 @@
+import prisma from "@/lib/prisma";
+import DeckTable from "./DecksTable";
 
-  const DecksPage = () => {
-  return (
-    <div>
-      <h1 className="text-center">Welcome to the DecksPage</h1>
-    </div>
-    );
-  };
+const DecksPage = async () => {
+  const decks = await prisma.deck.findMany();
 
-  export default DecksPage;
-  
+  return <DeckTable decks={decks} />;
+};
+
+export default DecksPage;

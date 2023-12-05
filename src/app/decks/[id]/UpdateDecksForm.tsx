@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { useState } from "react";
 import {
@@ -27,6 +28,8 @@ import Link from "next/link";
 import { Subject } from "@prisma/client";
 
 const formSchema = z.object({
+  id: z.string(),
+  subjectId: z.string(),
   title: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
@@ -36,42 +39,55 @@ const formSchema = z.object({
   imageUrl: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  subjectId: z.string().min(1, {
-    message: "You must select a subject.",
-  }),
 });
 
-type CreateDecksFormProps = {
+type UpdateDeckFromProps = {
+  id: string;
+  title: string;
   subjects: Subject[];
+  subjectId: string;
+  description: string | null;
+  imageUrl: string | null;
 };
 
-export function CreateDecksForm({ subjects }: CreateDecksFormProps) {
+export function UpdateDecksForm({
+  id,
+  title,
+  description,
+  imageUrl,
+  subjectId,
+  subjects,
+}: UpdateDeckFromProps) {
   const [isFetching, setIsFetching] = useState(false);
+  const router = useRouter();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      imageUrl: "",
-      subjectId: "",
+      id,
+      title,
+      description: description ?? "",
+      subjectId,
+      imageUrl: imageUrl ?? "",
     },
   });
 
-  const createDeck = async (values: z.infer<typeof formSchema>) => {
+  const updateDeck = async (values: z.infer<typeof formSchema>) => {
     const body = {
+      id: id,
       title: values.title,
       description: values.description,
-      imageUrl: values.imageUrl,
       subjectId: values.subjectId,
+      imageUrl: values.imageUrl,
     };
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/decks").post(body);
-      console.log(res);
+      const res = await api.url("/api/decks").patch(body);
       setIsFetching(false);
-      form.reset();
+      router.refresh();
+      console.log(res);
     } catch (error) {
       setIsFetching(false);
       console.log(error);
@@ -80,7 +96,7 @@ export function CreateDecksForm({ subjects }: CreateDecksFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(createDeck)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(updateDeck)} className="space-y-8">
         <FormField
           control={form.control}
           name="title"
@@ -125,6 +141,7 @@ export function CreateDecksForm({ subjects }: CreateDecksFormProps) {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="description"
