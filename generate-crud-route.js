@@ -21,7 +21,7 @@ const HTTP_METHODS = [
 // If an unsupported method is called, Next.js will return a 405 Method Not Allowed response.
 
 const generateRouteHandlers = (folderPath) => {
-  let pageContent = `import { NextRequest, NextResponse } from "next/server";`;
+  let pageContent = `import { NextRequest, NextResponse } from "next/server";\n`;
 
   HTTP_METHODS.forEach((method) => {
     pageContent =
@@ -62,8 +62,7 @@ const generateSubfolderPage = (folderPath, folderName, subfolder) => {
   const componentName =
     capitalizedOperation + capitalizedResource + PAGE_COMPONENT_SUFFIX;
 
-  const pageContent = `
-  const ${componentName} = () => {
+  const pageContent = `const ${componentName} = () => {
   return (
     <div>
       <h1 className="text-center">Welcome to the ${componentName}</h1>
@@ -97,8 +96,7 @@ const generateForm = (folderPath, folderName, subfolder) => {
   const componentName =
     capitalizedAction + capitalizedResource + FROM_COMPONENT_SUFFIX;
 
-  const pageContent = `
-  "use client";
+  const pageContent = `"use client";\n
   const ${componentName} = () => {
     return (
       <>
@@ -119,8 +117,7 @@ const generateTable = (folderPath, folderName) => {
   const capitalizedResource = capitalize(folderName);
   const componentName = capitalizedResource + TABLE_COMPONENT_SUFFIX;
 
-  const pageContent = `
-  "use client";
+  const pageContent = `"use client";\n
   const ${componentName} = () => {
     return (
       <>
@@ -143,8 +140,7 @@ const generatePage = (folderPath, folderName) => {
   const capitalizedResource = capitalize(folderName);
   const componentName = capitalizedResource + PAGE_COMPONENT_SUFFIX;
 
-  const pageContent = `
-  const ${componentName} = () => {
+  const pageContent = `const ${componentName} = () => {
   return (
     <div>
       <h1 className="text-center">Welcome to the ${componentName}</h1>

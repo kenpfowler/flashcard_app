@@ -1,11 +1,14 @@
+import prisma from "@/lib/prisma";
+import { CreateCardsForm } from "./CreateCardsForm";
 
-  const CreateCardsPage = () => {
+const CreateCardsPage = async () => {
+  const decks = await prisma.deck.findMany();
+
   return (
-    <div>
-      <h1 className="text-center">Welcome to the CreateCardsPage</h1>
+    <div className="flex justify-center">
+      <CreateCardsForm decks={decks} />
     </div>
-    );
-  };
+  );
+};
 
-  export default CreateCardsPage;
-  
+export default CreateCardsPage;

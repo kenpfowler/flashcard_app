@@ -1,11 +1,10 @@
+import prisma from "@/lib/prisma";
+import CardsTable from "./CardsTable";
 
-  const CardsPage = () => {
-  return (
-    <div>
-      <h1 className="text-center">Welcome to the CardsPage</h1>
-    </div>
-    );
-  };
+const CardsPage = async () => {
+  const cards = await prisma.card.findMany();
 
-  export default CardsPage;
-  
+  return <CardsTable cards={cards} />;
+};
+
+export default CardsPage;
