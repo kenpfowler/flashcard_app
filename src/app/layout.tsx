@@ -31,6 +31,10 @@ export default function RootLayout({
         <nav className="flex px-10 py-5 items-center w-full">
           <ul className="flex space-x-2">
             <li>
+              <Link href={"/"}>Dashboard</Link>
+            </li>
+
+            <li>
               <Link href={"/subjects"}>Subjects</Link>
             </li>
             <li>
@@ -41,9 +45,6 @@ export default function RootLayout({
             </li>
             <li>
               <Link href={"/answers"}>Answers</Link>
-            </li>
-            <li>
-              <Link href={"/session"}>Session</Link>
             </li>
           </ul>
         </nav>

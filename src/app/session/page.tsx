@@ -1,26 +1,17 @@
 import prisma from "@/lib/prisma";
-
 import { FlashCard } from "./FlashCard";
 
-export default async function SessionPage() {
-  // to start a quiz the user needs to select it from the deck
+export default async function SessionPage({ searchParams }: any) {
+  const { deck } = searchParams;
 
-  // subject
-  //  deck
-  // quiz <--- selecting the quiz from the hierarchy should trigger a fetch for all the data to run the quiz.
-
-  // to run through a quiz with a user we need display each question and answer combination
-  // the user needs to be able to select an answer and get feedback about the correctness
-  // the users responses need to be recorded for analysis
+  if (!deck) {
+    return <h1>No flashcard session found!</h1>;
+  }
 
   const items = await prisma.card.findMany({
-    where: { deckId: 5 },
+    where: { deckId: parseInt(deck) },
     include: { answers: true },
   });
-
-  // each item has the answers for a specific question
-  // when we output an item we want to output the answers as well
-  // so, we get the items answer property and map over it
 
   if (items.length === 0) {
     return <h3>There are no flashcards to display</h3>;
