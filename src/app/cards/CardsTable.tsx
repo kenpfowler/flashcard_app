@@ -30,6 +30,7 @@ const CardTable = ({ cards }: CardTableProps) => {
         <thead>
           <tr>
             <th className="text-left">Id</th>
+            <th className="text-left">Deck Id</th>
             <th className="text-left">Question</th>
             <th className="text-left">Question Type</th>
             <th className="text-left">Created</th>
@@ -43,6 +44,7 @@ const CardTable = ({ cards }: CardTableProps) => {
           {cards.map((card) => (
             <tr key={card.id}>
               <td>{card.id}</td>
+              <td>{card.deckId}</td>
               <td>{card.question}</td>
               <td>{card.questionType}</td>
               <td>{card.createdAt.toDateString()}</td>
