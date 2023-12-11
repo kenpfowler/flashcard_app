@@ -20,7 +20,14 @@ const DeckTable = ({ decks }: DeckTableProps) => {
   };
 
   if (decks.length === 0) {
-    return <h3>There are no decks to display</h3>;
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <h3>There are no decks to display</h3>
+        <Button asChild>
+          <Link href={"/decks/create"}>Create</Link>
+        </Button>
+      </div>
+    );
   }
 
   return (

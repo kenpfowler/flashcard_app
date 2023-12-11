@@ -19,6 +19,17 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
     });
   };
 
+  if (subjects.length === 0) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <h3>There are no subjects to display</h3>
+        <Button asChild>
+          <Link href={"/subjects/create"}>Create</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex justify-end">

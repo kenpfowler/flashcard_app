@@ -19,6 +19,17 @@ const AnswerTable = ({ answers }: AnswerTableProps) => {
     });
   };
 
+  if (answers.length === 0) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <h3>There are no answers to display</h3>
+        <Button asChild>
+          <Link href={"/answers/create"}>Create</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex justify-end">

@@ -19,6 +19,17 @@ const CardTable = ({ cards }: CardTableProps) => {
     });
   };
 
+  if (cards.length === 0) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <h3>There are no cards to display</h3>
+        <Button asChild>
+          <Link href={"/cards/create"}>Create</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex justify-end">

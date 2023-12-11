@@ -22,6 +22,10 @@ export default async function SessionPage() {
   // when we output an item we want to output the answers as well
   // so, we get the items answer property and map over it
 
+  if (items.length === 0) {
+    return <h3>There are no flashcards to display</h3>;
+  }
+
   return (
     <div className="flex flex-col justify-center items-center">
       {items.map((item) => (
