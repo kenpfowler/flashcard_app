@@ -31,13 +31,13 @@ const formSchema = z.object({
   id: z.string(),
   subjectId: z.string(),
   title: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Title must be at least 2 characters.",
   }),
   description: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Description must be at least 2 characters.",
   }),
   imageUrl: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Image URL must be at least 2 characters.",
   }),
 });
 
