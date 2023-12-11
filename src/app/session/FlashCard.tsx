@@ -55,7 +55,7 @@ export function FlashCard({ item }: FlashCardProps) {
   }
 
   return (
-    <Card className="w-[350px]" key={item.id}>
+    <Card className="w-[450px]" key={item.id}>
       <CardHeader>
         <CardTitle>{item.question}</CardTitle>
       </CardHeader>

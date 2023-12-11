@@ -46,8 +46,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         .flat()
     );
 
-    console.log(answers);
-
     return NextResponse.json(res);
   } catch (error) {
     console.log(error);

@@ -14,7 +14,7 @@ export default async function SessionPage() {
   // the users responses need to be recorded for analysis
 
   const items = await prisma.card.findMany({
-    where: { deckId: 2 },
+    where: { deckId: 6 },
     include: { answers: true },
   });
 
