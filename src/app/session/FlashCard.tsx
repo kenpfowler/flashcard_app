@@ -44,14 +44,27 @@ export function FlashCard({ item }: FlashCardProps) {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // if the users selection is correct
+    const answer = answers.find(
+      (answer) => data.selection === answer.id.toString()
+    );
+    const isCorrect = answer?.isCorrect;
+
+    if (!isCorrect) {
+      toast({
+        variant: "destructive",
+        title: "You answered incorrectly. Give it another shot.",
+      });
+    } else {
+      toast({
+        title: "You answered correctly!",
+        description: (
+          <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            {answer.answerText}
+          </div>
+        ),
+      });
+    }
   }
 
   return (
