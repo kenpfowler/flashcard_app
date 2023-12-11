@@ -33,10 +33,6 @@ export function FlashCard({ item }: FlashCardProps) {
     init[index] = ids[index];
   }
 
-  if (!ids.length) {
-    return;
-  }
-
   const FormSchema = z.object({
     selection: z.enum(init, {
       required_error: "You need to select an answer.",

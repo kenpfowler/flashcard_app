@@ -31,6 +31,7 @@ const AnswerTable = ({ answers }: AnswerTableProps) => {
           <tr>
             <th className="text-left">Id</th>
             <th className="text-left">Answer</th>
+            <th className="text-left">isCorrect</th>
             <th className="text-left">Card Id</th>
             <th className="text-left"></th>
             <th className="text-left"></th>
@@ -41,6 +42,7 @@ const AnswerTable = ({ answers }: AnswerTableProps) => {
             <tr key={answer.id}>
               <td>{answer.id}</td>
               <td>{answer.answerText}</td>
+              <td>{answer.isCorrect === true ? "true" : "false"}</td>
               <td>{answer.cardId}</td>
               <td>
                 <Link href={`/answers/${answer.id}`}>Update</Link>
