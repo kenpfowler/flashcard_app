@@ -52,15 +52,13 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.json();
-
-    // FIXME: need to validate input for type and security
-
     const deleted = await prisma.subject.delete({
       where: { id: parseInt(data.id) },
     });
 
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );
