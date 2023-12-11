@@ -85,7 +85,7 @@ model Deck {
   updatedAt   DateTime @updatedAt @map("updated_at")
   subjectId   Int      @map("subject_id")
   cards       Card[]
-  subject     Subject  @relation(fields: [subjectId], references: [id])
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@map("deck")
 }
@@ -99,7 +99,7 @@ model Card {
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
   answers      Answer[]
-  deck         Deck         @relation(fields: [deckId], references: [id])
+  deck         Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
 
   @@map("card")
 }
@@ -109,7 +109,7 @@ model Answer {
   answerText String  @map("answer_text") @db.VarChar(255)
   isCorrect  Boolean
   cardId     Int     @map("card_id")
-  card       Card    @relation(fields: [cardId], references: [id])
+  card       Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 
   @@map("answer")
 }
