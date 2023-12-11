@@ -106,7 +106,7 @@ model Card {
 
 model Answer {
   id         Int     @id @default(autoincrement())
-  answerText String  @map("answer_text") @db.VarChar(255)
+  answerText String  @map("answer_text")
   isCorrect  Boolean
   cardId     Int     @map("card_id")
   card       Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
