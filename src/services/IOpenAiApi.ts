@@ -1,41 +1,8 @@
 import OpenAI from "openai";
+import { IOpenAiApi } from "./OpenAiService";
 
-type Tool = {
-  type: "function";
-  function: {
-    description?: string;
-    name: string;
-    parameters: Properties;
-  };
-  required: Array<string>;
-};
-
-type Properties = {
-  type: "object";
-  properties: Object;
-};
-
-export class OpenAiService {
+export class OpenAiService implements IOpenAiApi {
   private readonly client = new OpenAI();
-  private readonly generate_mc_answer_tool: Tool = {
-    type: "function",
-    function: {
-      name: "generate_answers",
-      description:
-        "Generate four possible answers to a given question.  Only one answer can be correct.",
-      parameters: {
-        type: "object",
-        properties: {
-          question: {
-            type: "string",
-            description:
-              "The question the user wants to generate multiple choice answers for. example: Who is the inventor of bitcoin?",
-          },
-        },
-      },
-    },
-    required: ["question"],
-  };
 
   constructor() {
     this.client.apiKey = process.env.OPENAI_API_KEY ?? "";
@@ -73,15 +40,14 @@ export class OpenAiService {
     }
   }
 
-  async createAnswers(
-    question: string,
+  async parseCards(
+    questions: string[],
     subject: string
-  ): Promise<{ answer: string; isCorrect: boolean }[]> {
-    const systemPrompt = `You are a knowledgeable tutor of ${subject}. Create a list of four multiple choice style answers given a question. Only one answer can be correct and you will identify which one this is.  Store those answers in an array of JSON objects where each object is like this: { answer: string, isCorrect: boolean }`;
-    const userPrompt = `Here is the question: ${question}`;
-
-    // in this case we want to format our output in JSON that can be easily used to create answers in our database
-    // then specify that the client must use this function when generating its output.
+  ): Promise<
+    { question: string; answers: string[]; correctAnswerIndex: number }[]
+  > {
+    const systemPrompt = `You are a knowledgeable tutor of ${subject}. Create a list of four multiple choice style answers given a question. Only one answer can be correct and you will identify which one this is.  Store the questions with their answers in an array of JSON objects where each object is like this: { question: string, answers: string[], correctAnswerIndex: number }. The array must be valid JSON.  Only return the array with no other explanation or commentary.  Also, do not use markdown or any other markup decorate the your response.`;
+    const userPrompt = `Here is the questions: ${questions.join(", ")}`;
 
     try {
       const completion = await this.client.chat.completions.create({
