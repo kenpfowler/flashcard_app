@@ -91,38 +91,27 @@ model Deck {
 }
 
 model Card {
-  id            Int            @id @default(autoincrement())
-  question      String
-  questionType  QuestionType   @map("question_type")
-  deckId        Int            @map("deck_id")
-  imageUrl      String?        @map("image_url")
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
-  answers       Answer[]
-  deck          Deck           @relation(fields: [deckId], references: [id])
-  correctAnswer CorrectAnswer?
+  id           Int          @id @default(autoincrement())
+  question     String
+  questionType QuestionType @map("question_type")
+  deckId       Int          @map("deck_id")
+  imageUrl     String?      @map("image_url")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  answers      Answer[]
+  deck         Deck         @relation(fields: [deckId], references: [id])
 
   @@map("card")
 }
 
 model Answer {
-  id            Int            @id @default(autoincrement())
-  answerText    String         @map("answer_text") @db.VarChar(255)
-  cardId        Int            @map("card_id")
-  card          Card           @relation(fields: [cardId], references: [id])
-  CorrectAnswer CorrectAnswer?
+  id         Int     @id @default(autoincrement())
+  answerText String  @map("answer_text") @db.VarChar(255)
+  isCorrect  Boolean
+  cardId     Int     @map("card_id")
+  card       Card    @relation(fields: [cardId], references: [id])
 
   @@map("answer")
-}
-
-model CorrectAnswer {
-  cardId   Int    @unique @map("card_id")
-  answerId Int    @unique @map("answer_id")
-  answer   Answer @relation(fields: [answerId], references: [id])
-  card     Card   @relation(fields: [cardId], references: [id])
-
-  @@unique([cardId, answerId])
-  @@map("correct_answer")
 }
 
 enum QuestionType {
