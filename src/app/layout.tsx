@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -41,9 +42,13 @@ export default function RootLayout({
             <li>
               <Link href={"/answers"}>Answers</Link>
             </li>
+            <li>
+              <Link href={"/session"}>Session</Link>
+            </li>
           </ul>
         </nav>
         <div className="flex flex-col p-10">{children}</div>
+        <Toaster />
       </body>
     </html>
   );
