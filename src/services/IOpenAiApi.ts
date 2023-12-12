@@ -18,7 +18,7 @@ export class OpenAiService implements IOpenAiApi {
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo-1106",
       });
 
       const content = completion.choices[0].message.content;
@@ -55,7 +55,7 @@ export class OpenAiService implements IOpenAiApi {
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo-1106",
       });
 
       const content = completion.choices[0].message.content;

@@ -34,6 +34,7 @@ export function SelectSessionForm({
   subjectsWithDecks,
 }: SelectSessionFormProps) {
   const [decks, setDecks] = useState<Array<Deck>>([]);
+
   const router = useRouter();
 
   const FormSchema = z.object({
@@ -57,8 +58,8 @@ export function SelectSessionForm({
     router.push(`/session?deck=${data.deck}`);
   }
 
-  const selectedSubjectId = form.getValues("subject");
-  const selectedDeckId = form.getValues("deck");
+  const selectedSubjectId = form.watch("subject");
+  const selectedDeckId = form.watch("deck");
 
   useEffect(() => {
     if (selectedSubjectId) {
