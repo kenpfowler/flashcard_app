@@ -1,10 +1,14 @@
-const CreateAnswersPage = () => {
-  return (
-    <div>
-      <h1 className="text-center">Welcome to the CreateAnswersPage</h1>
-    </div>
-    );
-  };
+import prisma from "@/lib/prisma";
+import { CreateAnswersForm } from "./CreateAnswersForm";
 
-  export default CreateAnswersPage;
-  
+const CreateAnswerPage = async () => {
+  const cards = await prisma.card.findMany();
+
+  return (
+    <div className="flex justify-center">
+      <CreateAnswersForm cards={cards} />
+    </div>
+  );
+};
+
+export default CreateAnswerPage;

@@ -16,37 +16,46 @@ import {
 import api from "@/lib/api";
 import { useState } from "react";
 
-import { Deck } from "@prisma/client";
-import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
-  questions: z.string().min(2, {
-    message: "Your list of questions must be at least 2 characters.",
-  }),
-  deckId: z.string().min(1, {
-    message: "You must choose a deck",
+  answerText: z.string(),
+  isCorrect: z.boolean().default(false),
+  cardId: z.string().min(1, {
+    message: "You must choose a card",
   }),
 });
 
 type CreateAnswersFormProps = {
-  decks: Deck[];
+  cards: Card[];
 };
 
-export function CreateCardsForm({ decks }: CreateAnswersFormProps) {
+export function CreateAnswersForm({ cards }: CreateAnswersFormProps) {
   const [isFetching, setIsFetching] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      questions: "",
-      deckId: "",
+      answerText: "",
+      isCorrect: false,
+      cardId: "",
     },
   });
 
   const createAnswers = async (values: z.infer<typeof formSchema>) => {
     const body = {
-      questions: values.questions,
-      deckId: values.deckId,
+      answerText: values.answerText,
+      cardId: values.cardId,
+      isCorrect: values.isCorrect,
     };
 
     try {
@@ -66,16 +75,61 @@ export function CreateCardsForm({ decks }: CreateAnswersFormProps) {
       <form onSubmit={form.handleSubmit(createAnswers)} className="space-y-8">
         <FormField
           control={form.control}
-          name="questions"
+          name="answerText"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Questions</FormLabel>
+              <FormLabel>Answer</FormLabel>
               <FormControl>
-                <Textarea placeholder="add a list of questions." {...field} />
+                <Input placeholder="add your answer" {...field} />
               </FormControl>
               <FormDescription>
-                Post a list of questions. The AI will use these to generate your
-                flashcards.
+                The AI does it's best to create answers for you, but you can add
+                your own as well.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="cardId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Card</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a card to add this answer to" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {cards.map((card) => (
+                    <SelectItem key={card.id} value={card.id.toString()}>
+                      {card.question}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="isCorrect"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center gap-2">
+                <FormLabel>Correct answer</FormLabel>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </div>
+              <FormDescription>
+                Specify if this answer is meant to be the correct one.
               </FormDescription>
               <FormMessage />
             </FormItem>
