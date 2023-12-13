@@ -16,17 +16,13 @@ import {
 import api from "@/lib/api";
 import { useState } from "react";
 
-import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   id: z.string(),
-  question: z.string().min(1, {
-    message: "Your list of question must be at least 1 character long.",
-  }),
-  imageUrl: z.string().min(2, {
-    message: "Image URL must be at least 2 characters.",
-  }),
+  question: z.string(),
+  imageUrl: z.string(),
 });
 
 type UpdateCardFormProps = {
@@ -81,7 +77,7 @@ export function UpdateCardsForm({
             <FormItem>
               <FormLabel>Question</FormLabel>
               <FormControl>
-                <Textarea placeholder="edit your question..." {...field} />
+                <Input placeholder="edit your question..." {...field} />
               </FormControl>
               <FormDescription>
                 The AI does its best, but you can update your question title if
@@ -91,6 +87,7 @@ export function UpdateCardsForm({
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name="imageUrl"
@@ -98,10 +95,7 @@ export function UpdateCardsForm({
             <FormItem>
               <FormLabel>Image</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="update your image url here..."
-                  {...field}
-                />
+                <Input placeholder="update your image url here..." {...field} />
               </FormControl>
               <FormDescription>Update your image url</FormDescription>
               <FormMessage />
