@@ -41,8 +41,19 @@ export async function PUT(req: NextRequest, res: NextResponse) {
 }
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
+    const data = await req.json();
+    const { answerText, isCorrect, id } = data;
+
+    const answer = await prisma.answer.update({
+      data: {
+        answerText,
+        isCorrect,
+      },
+      where: { id: parseInt(id) },
+    });
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );
