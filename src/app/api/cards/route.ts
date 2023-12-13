@@ -57,14 +57,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
 }
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
-    const { imageUrl, question, id } = data;
+    const { imageUrl, question, id } = await req.json();
+
     const updated = await prisma.card.update({
-      data: { question: question, imageUrl: imageUrl },
+      data: { question, imageUrl },
       where: { id: parseInt(id) },
     });
 
-    console.log(updated);
     return NextResponse.json(res);
   } catch (error) {
     console.log(error);
@@ -76,8 +75,7 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
-    const { id } = data;
+    const { id } = await req.json();
     const deleted = await prisma.card.delete({ where: { id: parseInt(id) } });
     return NextResponse.json(res);
   } catch (error) {

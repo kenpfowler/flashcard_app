@@ -4,19 +4,19 @@ export async function GET(req: NextRequest, res: NextResponse) {}
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
+    const { subjectId, title, description, imageUrl } = await req.json();
 
-    // FIXME: need to validate input for type and security
     const created = await prisma.deck.create({
       data: {
-        subjectId: parseInt(data.subjectId),
-        title: data.title,
-        description: data.description,
-        imageUrl: data.imageUrl,
+        subjectId: parseInt(subjectId),
+        title,
+        description,
+        imageUrl,
       },
     });
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );
@@ -26,20 +26,21 @@ export async function PUT(req: NextRequest, res: NextResponse) {}
 
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
+    const { title, subjectId, id, description, imageUrl } = await req.json();
     // FIXME: need to validate input for type and security
     const updated = await prisma.deck.update({
-      where: { id: parseInt(data.id) },
+      where: { id: parseInt(id) },
       data: {
-        title: data.title,
-        subjectId: parseInt(data.subjectId),
-        description: data.description,
-        imageUrl: data.imageUrl,
+        title,
+        description,
+        imageUrl,
+        subjectId: parseInt(subjectId),
       },
     });
 
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );
@@ -48,16 +49,15 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
-
-    // FIXME: need to validate input for type and security
+    const { id } = await req.json();
 
     const deleted = await prisma.deck.delete({
-      where: { id: parseInt(data.id) },
+      where: { id: parseInt(id) },
     });
 
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );

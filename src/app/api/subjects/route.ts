@@ -8,15 +8,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
-
-    // FIXME: need to validate input for type and security
+    const { title, description, imageUrl } = await req.json();
 
     const created = await prisma.subject.create({
       data: {
-        title: data.title,
-        description: data.description,
-        imageUrl: data.imageUrl,
+        title,
+        description,
+        imageUrl,
       },
     });
 
@@ -30,19 +28,20 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
-    // FIXME: need to validate input for type and security
+    const { id, title, description, imageUrl } = await req.json();
+
     const updated = await prisma.subject.update({
-      where: { id: parseInt(data.id) },
+      where: { id: parseInt(id) },
       data: {
-        title: data.title,
-        description: data.description,
-        imageUrl: data.imageUrl,
+        title,
+        description,
+        imageUrl,
       },
     });
 
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );
@@ -51,9 +50,9 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
+    const { id } = await req.json();
     const deleted = await prisma.subject.delete({
-      where: { id: parseInt(data.id) },
+      where: { id: parseInt(id) },
     });
 
     return NextResponse.json(res);

@@ -50,8 +50,12 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 }
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
+    const data = await req.json();
+    const { id } = data;
+    const deleted = await prisma.answer.delete({ where: { id: parseInt(id) } });
     return NextResponse.json(res);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       JSON.stringify({ message: "failure", success: false })
     );
