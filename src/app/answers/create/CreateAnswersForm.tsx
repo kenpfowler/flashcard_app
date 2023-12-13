@@ -83,8 +83,8 @@ export function CreateAnswersForm({ cards }: CreateAnswersFormProps) {
                 <Input placeholder="add your answer" {...field} />
               </FormControl>
               <FormDescription>
-                The AI does it's best to create answers for you, but you can add
-                your own as well.
+                The AI does it&apos;s best to create answers for you, but you
+                can add your own as well.
               </FormDescription>
               <FormMessage />
             </FormItem>

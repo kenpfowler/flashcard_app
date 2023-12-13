@@ -69,7 +69,7 @@ export function SelectSessionForm({
         .filter((deck) => deck.subjectId.toString() === selectedSubjectId);
       setDecks(selectableDecks);
     }
-  }, [selectedSubjectId]);
+  }, [selectedSubjectId, subjectsWithDecks]);
 
   return (
     <Form {...form}>
