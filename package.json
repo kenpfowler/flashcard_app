@@ -27,6 +27,7 @@
     "next": "14.0.4",
     "openai": "^4.20.1",
     "react": "^18",
+    "react-arborist": "^3.4.0",
     "react-dom": "^18",
     "react-hook-form": "^7.49.0",
     "tailwind-merge": "^2.1.0",

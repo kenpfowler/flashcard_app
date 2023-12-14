@@ -44,9 +44,9 @@ export class OpenAiService implements IOpenAiApi {
     questions: string[],
     subject: string
   ): Promise<
-    { question: string; answers: string[]; correctAnswerIndex: number }[]
+    { name: string; answers: string[]; correctAnswerIndex: number }[]
   > {
-    const systemPrompt = `You are a knowledgeable tutor of ${subject}. Create a list of four multiple choice style answers given a question. Only one answer can be correct and you will identify which one this is.  Store the questions with their answers in an array of JSON objects where each object is like this: { question: string, answers: string[], correctAnswerIndex: number }. The array must be valid JSON.  Only return the array with no other explanation or commentary.  Also, do not use markdown or any other markup decorate the your response.`;
+    const systemPrompt = `You are a knowledgeable tutor of ${subject}. Create a list of four multiple choice style answers given a question. Only one answer can be correct and you will identify which one this is.  Store the questions with their answers in an array of JSON objects where each object is like this: { name: string, answers: string[], correctAnswerIndex: number }. The array must be valid JSON.  Only return the array with no other explanation or commentary.  Also, do not use markdown or any other markup decorate the your response.`;
     const userPrompt = `Here is the questions: ${questions.join(", ")}`;
 
     try {

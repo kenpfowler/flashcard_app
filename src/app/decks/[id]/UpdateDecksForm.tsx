@@ -30,8 +30,8 @@ import { Subject } from "@prisma/client";
 const formSchema = z.object({
   id: z.string(),
   subjectId: z.string(),
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "name must be at least 2 characters.",
   }),
   description: z.string().min(2, {
     message: "Description must be at least 2 characters.",
@@ -43,7 +43,7 @@ const formSchema = z.object({
 
 type UpdateDeckFromProps = {
   id: string;
-  title: string;
+  name: string;
   subjects: Subject[];
   subjectId: string;
   description: string | null;
@@ -52,7 +52,7 @@ type UpdateDeckFromProps = {
 
 export function UpdateDecksForm({
   id,
-  title,
+  name,
   description,
   imageUrl,
   subjectId,
@@ -66,7 +66,7 @@ export function UpdateDecksForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       id,
-      title,
+      name,
       description: description ?? "",
       subjectId,
       imageUrl: imageUrl ?? "",
@@ -76,7 +76,7 @@ export function UpdateDecksForm({
   const updateDeck = async (values: z.infer<typeof formSchema>) => {
     const body = {
       id: id,
-      title: values.title,
+      name: values.name,
       description: values.description,
       subjectId: values.subjectId,
       imageUrl: values.imageUrl,
@@ -99,12 +99,12 @@ export function UpdateDecksForm({
       <form onSubmit={form.handleSubmit(updateDeck)} className="space-y-8">
         <FormField
           control={form.control}
-          name="title"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>name</FormLabel>
               <FormControl>
-                <Input placeholder="add a title" {...field} />
+                <Input placeholder="add a name" {...field} />
               </FormControl>
               <FormDescription>
                 Subjects are the domain you want to study
@@ -128,7 +128,7 @@ export function UpdateDecksForm({
                 <SelectContent>
                   {subjects.map((subject) => (
                     <SelectItem key={subject.id} value={subject.id.toString()}>
-                      {subject.title}
+                      {subject.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

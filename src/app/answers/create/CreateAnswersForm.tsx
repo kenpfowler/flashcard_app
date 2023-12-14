@@ -105,7 +105,7 @@ export function CreateAnswersForm({ cards }: CreateAnswersFormProps) {
                 <SelectContent>
                   {cards.map((card) => (
                     <SelectItem key={card.id} value={card.id.toString()}>
-                      {card.question}
+                      {card.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

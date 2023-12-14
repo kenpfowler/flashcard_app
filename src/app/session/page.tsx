@@ -9,7 +9,7 @@ export default async function SessionPage({ searchParams }: any) {
   }
 
   const items = await prisma.card.findMany({
-    where: { deckId: parseInt(deck) },
+    where: { deckId: deck },
     include: { answers: true },
   });
 

@@ -70,7 +70,7 @@ export function FlashCard({ item }: FlashCardProps) {
   return (
     <Card className="w-[450px]" key={item.id}>
       <CardHeader>
-        <CardTitle>{item.question}</CardTitle>
+        <CardTitle>{item.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>

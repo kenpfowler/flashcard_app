@@ -41,7 +41,7 @@ const DeckTable = ({ decks }: DeckTableProps) => {
         <thead>
           <tr>
             <th className="text-left">Id</th>
-            <th className="text-left">Title</th>
+            <th className="text-left">name</th>
             <th className="text-left">Description</th>
             <th className="text-left">Created</th>
             <th className="text-left">Updated</th>
@@ -54,7 +54,7 @@ const DeckTable = ({ decks }: DeckTableProps) => {
           {decks.map((deck) => (
             <tr key={deck.id}>
               <td>{deck.id}</td>
-              <td>{deck.title}</td>
+              <td>{deck.name}</td>
               <td>{deck.description}</td>
               <td>{deck.createdAt.toDateString()}</td>
               <td>{deck.updatedAt.toDateString()}</td>

@@ -2,10 +2,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider  = "postgresql"
+//   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+//   directUrl = env("POSTGRES_PRISMA_URL_NON_POOLING") // uses a direct connection
+// }
+
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_PRISMA_URL_NON_POOLING") // uses a direct connection
+  provider          = "postgresql"
+  url               = env("LOCAL_POSTGRES_URL")
+  shadowDatabaseUrl = env("LOCAL_SHADOW_DATABASE_URL")
 }
 
 model Account {
@@ -65,36 +71,36 @@ model VerificationRequest {
 }
 
 model Subject {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   imageUrl    String?  @map("image_url")
-  decks       Deck[]
+  children    Deck[]
 
   @@map("subject")
 }
 
 model Deck {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(255)
   description String?  @db.VarChar(255)
   imageUrl    String?  @map("image_url")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  subjectId   Int      @map("subject_id")
-  cards       Card[]
+  subjectId   String   @map("subject_id")
+  children    Card[]
   subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@map("deck")
 }
 
 model Card {
-  id           Int          @id @default(autoincrement())
-  question     String
+  id           String       @id @default(cuid())
+  name         String
   questionType QuestionType @map("question_type")
-  deckId       Int          @map("deck_id")
+  deckId       String       @map("deck_id")
   imageUrl     String?      @map("image_url")
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
@@ -105,10 +111,10 @@ model Card {
 }
 
 model Answer {
-  id         Int     @id @default(autoincrement())
+  id         String  @id @default(cuid())
   answerText String  @map("answer_text")
   isCorrect  Boolean
-  cardId     Int     @map("card_id")
+  cardId     String  @map("card_id")
   card       Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 
   @@map("answer")

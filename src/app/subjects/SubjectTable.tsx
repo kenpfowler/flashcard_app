@@ -41,7 +41,7 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
         <thead>
           <tr>
             <th className="text-left">Id</th>
-            <th className="text-left">Title</th>
+            <th className="text-left">name</th>
             <th className="text-left">Description</th>
             <th className="text-left">Created</th>
             <th className="text-left">Updated</th>
@@ -54,7 +54,7 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
           {subjects.map((subject) => (
             <tr key={subject.id}>
               <td>{subject.id}</td>
-              <td>{subject.title}</td>
+              <td>{subject.name}</td>
               <td>{subject.description}</td>
               <td>{subject.createdAt.toDateString()}</td>
               <td>{subject.updatedAt.toDateString()}</td>

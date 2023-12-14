@@ -3,7 +3,9 @@ import { SelectSessionForm } from "./SelectSessionForm";
 import prisma from "@/lib/prisma";
 
 export default async function Home() {
-  const subjects = await prisma.subject.findMany({ include: { decks: true } });
+  const subjects = await prisma.subject.findMany({
+    include: { children: true },
+  });
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-between p-24">

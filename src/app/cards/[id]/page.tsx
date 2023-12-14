@@ -5,7 +5,7 @@ import { UpdateCardsForm } from "./UpdateCardsForm";
 
 const UpdateCardsComponent = async ({ params }: BaseDynamicRouteProps) => {
   const card = await prisma.card.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: params.id },
   });
 
   const subjects = await prisma.subject.findMany();
@@ -22,7 +22,7 @@ const UpdateCardsComponent = async ({ params }: BaseDynamicRouteProps) => {
     <div className="flex justify-center">
       <UpdateCardsForm
         id={params.id}
-        question={card.question}
+        name={card.name}
         imageUrl={card.imageUrl ?? ""}
       />
     </div>

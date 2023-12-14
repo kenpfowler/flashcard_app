@@ -4,12 +4,12 @@ export async function GET(req: NextRequest, res: NextResponse) {}
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { subjectId, title, description, imageUrl } = await req.json();
+    const { subjectId, name, description, imageUrl } = await req.json();
 
     const created = await prisma.deck.create({
       data: {
-        subjectId: parseInt(subjectId),
-        title,
+        subjectId,
+        name,
         description,
         imageUrl,
       },
@@ -26,15 +26,15 @@ export async function PUT(req: NextRequest, res: NextResponse) {}
 
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
-    const { title, subjectId, id, description, imageUrl } = await req.json();
+    const { name, subjectId, id, description, imageUrl } = await req.json();
     // FIXME: need to validate input for type and security
     const updated = await prisma.deck.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
-        title,
+        name,
         description,
         imageUrl,
-        subjectId: parseInt(subjectId),
+        subjectId,
       },
     });
 
@@ -52,7 +52,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
     const { id } = await req.json();
 
     const deleted = await prisma.deck.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     });
 
     return NextResponse.json(res);

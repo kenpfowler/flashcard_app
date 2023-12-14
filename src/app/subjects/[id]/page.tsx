@@ -5,7 +5,7 @@ import { UpdateSubjectForm } from "./UpdateSubjectForm";
 
 const UpdateSubjectsComponent = async ({ params }: BaseDynamicRouteProps) => {
   const subject = await prisma.subject.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: params.id },
   });
 
   if (!subject) {
@@ -16,7 +16,7 @@ const UpdateSubjectsComponent = async ({ params }: BaseDynamicRouteProps) => {
     <div className="flex justify-center">
       <UpdateSubjectForm
         id={params.id}
-        title={subject.title}
+        name={subject.name}
         description={subject.description}
         imageUrl={subject.imageUrl}
       />

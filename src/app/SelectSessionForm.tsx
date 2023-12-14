@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type SelectSessionFormProps = {
-  subjectsWithDecks: Array<Subject & { decks: Array<Deck> }>;
+  subjectsWithDecks: Array<Subject & { children: Array<Deck> }>;
 };
 
 export function SelectSessionForm({
@@ -41,13 +41,6 @@ export function SelectSessionForm({
     subject: z.string(),
     deck: z.string(),
   });
-
-  // based on the subject the user selects we want to update the list of decks to show the related choices
-  // how can we achieve this?
-  // we have already fetched every deck with our subjects....
-  // decks are organized like so: decks: Array<Deck> where each deck can be related to the parent subject by its subjectId property
-
-  // filter the items in the decks property for all decks related to
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -64,7 +57,7 @@ export function SelectSessionForm({
   useEffect(() => {
     if (selectedSubjectId) {
       const selectableDecks = subjectsWithDecks
-        .map((item) => item.decks)
+        .map((item) => item.children)
         .flat()
         .filter((deck) => deck.subjectId.toString() === selectedSubjectId);
       setDecks(selectableDecks);
@@ -89,7 +82,7 @@ export function SelectSessionForm({
                 <SelectContent>
                   {subjectsWithDecks.map((item) => (
                     <SelectItem key={item.id} value={item.id.toString()}>
-                      {item.title}
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -117,7 +110,7 @@ export function SelectSessionForm({
                   <SelectContent>
                     {decks.map((item) => (
                       <SelectItem key={item.id} value={item.id.toString()}>
-                        {item.title}
+                        {item.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

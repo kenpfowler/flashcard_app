@@ -18,7 +18,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       data: {
         answerText: answerText,
         isCorrect: isCorrect,
-        cardId: parseInt(cardId),
+        cardId: cardId,
       },
     });
 
@@ -49,7 +49,7 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
         answerText,
         isCorrect,
       },
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     return NextResponse.json(res);
   } catch (error) {
@@ -63,7 +63,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.json();
     const { id } = data;
-    const deleted = await prisma.answer.delete({ where: { id: parseInt(id) } });
+    const deleted = await prisma.answer.delete({ where: { id } });
     return NextResponse.json(res);
   } catch (error) {
     console.log(error);

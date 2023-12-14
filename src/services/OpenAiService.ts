@@ -4,6 +4,6 @@ export interface IOpenAiApi {
     questions: string[],
     subject: string
   ) => Promise<
-    Array<{ question: string; answers: string[]; correctAnswerIndex: number }>
+    Array<{ name: string; answers: string[]; correctAnswerIndex: number }>
   >;
 }

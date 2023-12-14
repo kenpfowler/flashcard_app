@@ -5,7 +5,7 @@ import { UpdateAnswersForm } from "./UpdateAnswersForm";
 
 const UpdateCardsComponent = async ({ params }: BaseDynamicRouteProps) => {
   const answer = await prisma.answer.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: params.id },
   });
 
   if (!answer) {

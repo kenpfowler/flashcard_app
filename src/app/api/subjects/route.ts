@@ -8,11 +8,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { title, description, imageUrl } = await req.json();
+    const { name, description, imageUrl } = await req.json();
 
     const created = await prisma.subject.create({
       data: {
-        title,
+        name,
         description,
         imageUrl,
       },
@@ -28,12 +28,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
-    const { id, title, description, imageUrl } = await req.json();
+    const { id, name, description, imageUrl } = await req.json();
 
     const updated = await prisma.subject.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
-        title,
+        name,
         description,
         imageUrl,
       },
@@ -52,7 +52,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
     const { id } = await req.json();
     const deleted = await prisma.subject.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     });
 
     return NextResponse.json(res);

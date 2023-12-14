@@ -8,12 +8,12 @@ export async function GET(req: NextRequest, res: NextResponse) {}
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.json();
-    const deckIdAsInt = parseInt(data.deckId);
+    const deckIdAsInt = data.deckId;
     const deck = await prisma.deck.findFirst({
       where: { id: deckIdAsInt },
     });
 
-    const subject = deck?.title ?? "";
+    const subject = deck?.name ?? "";
     const questions = await aiClient.parseQuestions(data.questions);
     const cardData = await aiClient.parseCards(questions, subject);
     const answersMatrix = await cardData.map((data) => data.answers);
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       cardData.map((data) =>
         prisma.card.create({
           data: {
-            question: data.question,
+            name: data.name,
             questionType: "MC",
             deckId: deckIdAsInt,
           },
@@ -57,11 +57,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 }
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
-    const { imageUrl, question, id } = await req.json();
+    const { imageUrl, name, id } = await req.json();
 
     const updated = await prisma.card.update({
-      data: { question, imageUrl },
-      where: { id: parseInt(id) },
+      data: { name, imageUrl },
+      where: { id: id },
     });
 
     return NextResponse.json(res);
@@ -76,7 +76,7 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
     const { id } = await req.json();
-    const deleted = await prisma.card.delete({ where: { id: parseInt(id) } });
+    const deleted = await prisma.card.delete({ where: { id } });
     return NextResponse.json(res);
   } catch (error) {
     console.log(error);

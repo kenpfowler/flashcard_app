@@ -5,7 +5,7 @@ import { UpdateDecksForm } from "./UpdateDecksForm";
 
 const UpdateDecksComponent = async ({ params }: BaseDynamicRouteProps) => {
   const deck = await prisma.deck.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: params.id },
   });
 
   const subjects = await prisma.subject.findMany();
@@ -24,7 +24,7 @@ const UpdateDecksComponent = async ({ params }: BaseDynamicRouteProps) => {
         id={params.id}
         subjectId={deck.subjectId.toString()}
         subjects={subjects}
-        title={deck.title}
+        name={deck.name}
         description={deck.description}
         imageUrl={deck.imageUrl}
       />

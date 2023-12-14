@@ -21,21 +21,17 @@ import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   id: z.string(),
-  question: z.string(),
+  name: z.string(),
   imageUrl: z.string(),
 });
 
 type UpdateCardFormProps = {
   id: string;
-  question: string;
+  name: string;
   imageUrl: string;
 };
 
-export function UpdateCardsForm({
-  id,
-  question,
-  imageUrl,
-}: UpdateCardFormProps) {
+export function UpdateCardsForm({ id, name, imageUrl }: UpdateCardFormProps) {
   const [isFetching, setIsFetching] = useState(false);
   const router = useRouter();
   // 1. Define your form.
@@ -43,7 +39,7 @@ export function UpdateCardsForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       id,
-      question,
+      name,
       imageUrl,
     },
   });
@@ -51,7 +47,7 @@ export function UpdateCardsForm({
   const updateCard = async (values: z.infer<typeof formSchema>) => {
     const body = {
       id: id,
-      question: values.question,
+      name: values.name,
       imageUrl: values.imageUrl,
     };
 
@@ -72,22 +68,22 @@ export function UpdateCardsForm({
       <form onSubmit={form.handleSubmit(updateCard)} className="space-y-8">
         <FormField
           control={form.control}
-          name="question"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Question</FormLabel>
+              <FormLabel>name</FormLabel>
               <FormControl>
-                <Input placeholder="edit your question..." {...field} />
+                <Input placeholder="edit your name..." {...field} />
               </FormControl>
               <FormDescription>
-                The AI does its best, but you can update your question title if
+                The AI does its best, but you can update your Question name if
                 it isn&apos;t quite right.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="imageUrl"

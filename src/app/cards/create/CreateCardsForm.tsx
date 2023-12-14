@@ -36,17 +36,6 @@ const formSchema = z.object({
   }),
 });
 
-// id            Int            @id @default(autoincrement())
-// question      String         @db.VarChar(255)
-// questionType  QuestionType   @map("question_type")
-// deckId        Int            @map("deck_id")
-// imageUrl      String?        @map("image_url")
-// createdAt     DateTime       @default(now()) @map("created_at")
-// updatedAt     DateTime       @updatedAt @map("updated_at")
-// answers       Answer[]
-// deck          Deck           @relation(fields: [deckId], references: [id])
-// correctAnswer CorrectAnswer?
-
 type CreateCardsFormProps = {
   decks: Deck[];
 };
@@ -115,7 +104,7 @@ export function CreateCardsForm({ decks }: CreateCardsFormProps) {
                 <SelectContent>
                   {decks.map((deck) => (
                     <SelectItem key={deck.id} value={deck.id.toString()}>
-                      {deck.title}
+                      {deck.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

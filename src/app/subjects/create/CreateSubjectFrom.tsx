@@ -18,7 +18,7 @@ import api from "@/lib/api";
 import { useState } from "react";
 
 const formSchema = z.object({
-  title: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
   description: z.string().min(2, {
@@ -35,7 +35,7 @@ export function CreateSubjectForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+      name: "",
       description: "",
       imageUrl: "",
     },
@@ -43,7 +43,7 @@ export function CreateSubjectForm() {
 
   const createSubject = async (values: z.infer<typeof formSchema>) => {
     const body = {
-      title: values.title,
+      name: values.name,
       description: values.description,
       imageUrl: values.imageUrl,
     };
@@ -64,12 +64,12 @@ export function CreateSubjectForm() {
       <form onSubmit={form.handleSubmit(createSubject)} className="space-y-8">
         <FormField
           control={form.control}
-          name="title"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>name</FormLabel>
               <FormControl>
-                <Input placeholder="add a title" {...field} />
+                <Input placeholder="add a name" {...field} />
               </FormControl>
               <FormDescription>
                 Subjects are the domain you want to study
