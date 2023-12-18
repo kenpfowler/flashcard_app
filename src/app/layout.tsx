@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
 import prisma from "@/lib/prisma";
 import { BasicTree } from "./TreeView";
+import { TreeViewMenu } from "./TreeViewMenu";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -45,9 +46,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const tree = await prisma.subject.findMany({ include: { children: true } });
-
-  console.log(tree.map((node) => node.children));
+  const tree = await prisma.subject.findMany({
+    include: { children: { include: { children: true } } },
+  });
 
   return (
     <html className="dark" lang="en">
@@ -78,7 +79,8 @@ export default async function RootLayout({
           </ul>
         </nav>
         <div className="flex">
-          <div className="flex flex-col">
+          <div className="flex flex-col px-4">
+            <TreeViewMenu />
             <BasicTree data={tree} />
           </div>
           <div className="w-full">{children}</div>
