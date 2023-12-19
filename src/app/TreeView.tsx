@@ -49,7 +49,7 @@ function Node({
 
   const handleDelete = async (id: string, type: NodeType) => {
     const isConfirmed = window.confirm(
-      "This action will delete your subject, decks, and any cards you have created.  Are you sure?"
+      `This action will delete your ${nodes[type]}. Are you sure?`
     );
 
     if (isConfirmed) {
@@ -107,7 +107,9 @@ function Node({
               <ContextMenuTrigger>{node.data.name}</ContextMenuTrigger>
               <ContextMenuContent>
                 <ContextMenuItem asChild>
-                  <Link href="/cards/generate">Create Card</Link>
+                  <Link href={`/cards/create?deck=${node.id}`}>
+                    Create Card
+                  </Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
                   <Link href={`/cards/generate`}>Generate Card</Link>
@@ -119,7 +121,16 @@ function Node({
                   <Link href={`/decks/${node.id}`}>Edit Deck</Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/decks/${node.id}`}>Delete Deck</Link>
+                  <Button
+                    onClick={async () => {
+                      await handleDelete(node.id, node.level);
+                      router.refresh();
+                    }}
+                    variant={"ghost"}
+                    className="w-full justify-start"
+                  >
+                    Delete Deck
+                  </Button>
                 </ContextMenuItem>
               </ContextMenuContent>
             </ContextMenu>
@@ -140,7 +151,16 @@ function Node({
                   <Link href={`/cards/${node.id}`}>Edit Card</Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/cards/generate`}>Delete Card</Link>
+                  <Button
+                    onClick={async () => {
+                      await handleDelete(node.id, node.level);
+                      router.refresh();
+                    }}
+                    variant={"ghost"}
+                    className="w-full justify-start"
+                  >
+                    Delete Card
+                  </Button>
                 </ContextMenuItem>
               </ContextMenuContent>
             </ContextMenu>

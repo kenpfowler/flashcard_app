@@ -1,12 +1,13 @@
 import prisma from "@/lib/prisma";
-import { CreateCardsForm } from "./CreateCardsForm";
+import { CreateCardForm } from "./CreateCardForm";
+import { WithSearchParams } from "@/types/types";
 
-const CreateCardsPage = async () => {
-  const decks = await prisma.deck.findMany();
+const CreateCardsPage = async ({ searchParams }: WithSearchParams) => {
+  const { deck } = searchParams;
 
   return (
     <div className="flex justify-center">
-      <CreateCardsForm decks={decks} />
+      <CreateCardForm deckId={deck} />
     </div>
   );
 };

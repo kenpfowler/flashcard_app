@@ -42,10 +42,11 @@ const formSchema = z.object({
 });
 
 type CreateDecksFormProps = {
+  subjectId?: string;
   subjects: Subject[];
 };
 
-export function CreateDecksForm({ subjects }: CreateDecksFormProps) {
+export function CreateDecksForm({ subjects, subjectId }: CreateDecksFormProps) {
   const [isFetching, setIsFetching] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,7 +55,7 @@ export function CreateDecksForm({ subjects }: CreateDecksFormProps) {
       name: "",
       description: "",
       imageUrl: "",
-      subjectId: "",
+      subjectId: subjectId ?? "",
     },
   });
 

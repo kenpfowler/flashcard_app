@@ -13,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import api from "@/lib/api";
 import { useState } from "react";
 import {
@@ -36,11 +35,11 @@ const formSchema = z.object({
   }),
 });
 
-type CreateCardsFormProps = {
-  decks: Deck[];
+type GenerateCardFormProps = {
+  decks: Pick<Deck, "id" | "name">[];
 };
 
-export function CreateCardsForm({ decks }: CreateCardsFormProps) {
+export function GenerateCardsForm({ decks }: GenerateCardFormProps) {
   const [isFetching, setIsFetching] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,7 +50,7 @@ export function CreateCardsForm({ decks }: CreateCardsFormProps) {
     },
   });
 
-  const createCards = async (values: z.infer<typeof formSchema>) => {
+  const generateCards = async (values: z.infer<typeof formSchema>) => {
     const body = {
       questions: values.questions,
       deckId: values.deckId,
@@ -59,19 +58,17 @@ export function CreateCardsForm({ decks }: CreateCardsFormProps) {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/cards").post(body);
-      console.log(res);
+      const res = await api.url("/api/cards/generate").post(body);
       setIsFetching(false);
       form.reset();
     } catch (error) {
       setIsFetching(false);
-      console.log(error);
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(createCards)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(generateCards)} className="space-y-8">
         <FormField
           control={form.control}
           name="questions"

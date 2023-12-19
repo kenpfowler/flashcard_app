@@ -24,6 +24,9 @@ const CardTable = ({ cards }: CardTableProps) => {
       <div className="flex flex-col justify-center items-center">
         <h3>There are no cards to display</h3>
         <Button asChild>
+          <Link href={"/cards/generate"}>Generate</Link>
+        </Button>
+        <Button asChild>
           <Link href={"/cards/create"}>Create</Link>
         </Button>
       </div>
