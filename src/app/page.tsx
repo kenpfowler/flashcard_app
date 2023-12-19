@@ -12,7 +12,7 @@ export default async function Home() {
     return (
       <main className="min-h-screen flex flex-col items-center justify-between p-24">
         <div className="flex flex-col items-center space-y-2 justify-center ">
-          <h3>You haven't created and subjects to study.</h3>
+          <h3>You haven&apos;t created and subjects to study.</h3>
           <Button asChild>
             <Link href={"/subjects/create"}>Create</Link>
           </Button>
