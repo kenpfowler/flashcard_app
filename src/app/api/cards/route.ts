@@ -1,51 +1,35 @@
 import prisma from "@/lib/prisma";
-import { OpenAiService } from "@/services/IOpenAiApi";
-import { AwardIcon } from "lucide-react";
 import { NextRequest, NextResponse } from "next/server";
-const aiClient = new OpenAiService();
 
 export async function GET(req: NextRequest, res: NextResponse) {}
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const data = await req.json();
-    const deckIdAsInt = data.deckId;
-    const deck = await prisma.deck.findFirst({
-      where: { id: deckIdAsInt },
+    const {
+      name,
+      imageUrl,
+      deckId,
+      answer_1,
+      isCorrect_1,
+      answer_2,
+      isCorrect_2,
+      answer_3,
+      isCorrect_3,
+      answer_4,
+      isCorrect_4,
+    } = await req.json();
+
+    const { id } = await prisma.card.create({
+      data: { name, imageUrl, deckId, questionType: "MC" },
     });
 
-    const subject = deck?.name ?? "";
-    const questions = await aiClient.parseQuestions(data.questions);
-    const cardData = await aiClient.parseCards(questions, subject);
-    const answersMatrix = await cardData.map((data) => data.answers);
-
-    const cards = await prisma.$transaction(
-      cardData.map((data) =>
-        prisma.card.create({
-          data: {
-            name: data.name,
-            questionType: "MC",
-            deckId: deckIdAsInt,
-          },
-        })
-      )
-    );
-
-    const answers = await prisma.$transaction(
-      answersMatrix
-        .map((row, index) => {
-          let outerIndex = index;
-          return row.map((answer, index) =>
-            prisma.answer.create({
-              data: {
-                answerText: answer,
-                cardId: cards[outerIndex].id,
-                isCorrect: cardData[outerIndex].correctAnswerIndex === index,
-              },
-            })
-          );
-        })
-        .flat()
-    );
+    const answers = await prisma.answer.createMany({
+      data: [
+        { answerText: answer_1, isCorrect: isCorrect_1, cardId: id },
+        { answerText: answer_2, isCorrect: isCorrect_2, cardId: id },
+        { answerText: answer_3, isCorrect: isCorrect_3, cardId: id },
+        { answerText: answer_4, isCorrect: isCorrect_4, cardId: id },
+      ],
+    });
 
     return NextResponse.json(res);
   } catch (error) {
@@ -55,6 +39,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
   }
 }
+
 export async function PATCH(req: NextRequest, res: NextResponse) {
   try {
     const { imageUrl, name, id } = await req.json();
