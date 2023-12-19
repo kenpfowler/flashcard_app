@@ -1,5 +1,9 @@
-export type BaseDynamicRouteProps = {
+export type WithParams = {
   params: { [key: string]: string };
+};
+
+export type WithSearchParams = {
+  searchParams: { [key: string]: string };
 };
 
 export type ComponentWithChildren = {
