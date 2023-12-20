@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
-import { BaseDynamicRouteProps } from "@/types/types";
+import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateCardsForm } from "./UpdateCardsForm";
 
-const UpdateCardsComponent = async ({ params }: BaseDynamicRouteProps) => {
+const UpdateCardsComponent = async ({ params }: WithParams) => {
   const card = await prisma.card.findUnique({
     where: { id: params.id },
   });

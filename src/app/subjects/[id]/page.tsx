@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
-import { BaseDynamicRouteProps } from "@/types/types";
+import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateSubjectForm } from "./UpdateSubjectForm";
 
-const UpdateSubjectsComponent = async ({ params }: BaseDynamicRouteProps) => {
+const UpdateSubjectsComponent = async ({ params }: WithParams) => {
   const subject = await prisma.subject.findUnique({
     where: { id: params.id },
   });
