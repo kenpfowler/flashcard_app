@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { FlashCard } from "./FlashCard";
+import { SessionForm } from "./SessionForm";
 
 export default async function SessionPage({ searchParams }: any) {
   const { deck } = searchParams;
@@ -16,12 +16,11 @@ export default async function SessionPage({ searchParams }: any) {
   if (items.length === 0) {
     return <h3>There are no flashcards to display</h3>;
   }
+  // The flashcards are being output individually, but I think I want to output the entire form at once.
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {items.map((item) => (
-        <FlashCard key={item.id} item={item} />
-      ))}
+      <SessionForm items={items} />
     </div>
   );
 }
