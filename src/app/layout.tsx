@@ -63,7 +63,9 @@ export default async function RootLayout({
             <li>
               <Link href={"/"}>Dashboard</Link>
             </li>
-
+            <li>
+              <Link href={"/submission"}>Submission</Link>
+            </li>
             <li>
               <Link href={"/subjects"}>Subjects</Link>
             </li>

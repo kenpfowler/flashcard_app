@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import { SessionForm } from "./SessionForm";
+import { WithSearchParams } from "@/types/types";
 
-export default async function SessionPage({ searchParams }: any) {
+export default async function SessionPage({ searchParams }: WithSearchParams) {
   const { deck } = searchParams;
 
   if (!deck) {
@@ -13,6 +14,10 @@ export default async function SessionPage({ searchParams }: any) {
     include: { answers: true },
   });
 
+  const correctAnswers = items.map(
+    (item) => item.answers.find((answer) => answer.isCorrect)?.id ?? ""
+  );
+
   if (items.length === 0) {
     return <h3>There are no flashcards to display</h3>;
   }
@@ -20,7 +25,11 @@ export default async function SessionPage({ searchParams }: any) {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <SessionForm items={items} />
+      <SessionForm
+        items={items}
+        correctAnswers={correctAnswers}
+        deckId={deck}
+      />
     </div>
   );
 }

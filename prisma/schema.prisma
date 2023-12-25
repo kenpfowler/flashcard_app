@@ -54,6 +54,7 @@ model User {
   updatedAt     DateTime  @updatedAt @map("updated_at")
   accounts      Account[]
   sessions      Session[]
+  // Submission    Submission[]
 
   @@map("user")
 }
@@ -83,15 +84,16 @@ model Subject {
 }
 
 model Deck {
-  id          String   @id @default(cuid())
-  name        String   @db.VarChar(255)
-  description String?  @db.VarChar(255)
-  imageUrl    String?  @map("image_url")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  subjectId   String   @map("subject_id")
+  id          String       @id @default(cuid())
+  name        String       @db.VarChar(255)
+  description String?      @db.VarChar(255)
+  imageUrl    String?      @map("image_url")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  subjectId   String       @map("subject_id")
   children    Card[]
-  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject     Subject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  Submission  Submission[]
 
   @@map("deck")
 }
@@ -106,8 +108,35 @@ model Card {
   updatedAt    DateTime     @updatedAt @map("updated_at")
   answers      Answer[]
   deck         Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  responses    Response[]
 
   @@map("card")
+}
+
+model Submission {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  deckId    String     @map("deck_id")
+  deck      Deck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  // userId    String     @map("user_id")
+  // user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  responses Response[]
+  userId    String?
+
+  @@map("submission")
+}
+
+model Response {
+  id              String     @id @default(cuid())
+  submissionId    String     @map("submission_id")
+  submission      Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  cardId          String     @map("card_id")
+  card            Card       @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  answerId        String     @map("answer_id")
+  correctAnswerId String     @map("correct_answer_id")
+
+  @@map("response")
 }
 
 model Answer {
