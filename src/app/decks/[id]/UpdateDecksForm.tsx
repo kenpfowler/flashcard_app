@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import api from "@/lib/api";
 import { useState } from "react";
 import {
   Select,
@@ -25,7 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { Subject } from "@prisma/client";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Subject } from "@/types/prisma";
 
 const formSchema = z.object({
   id: z.string(),
@@ -84,10 +84,12 @@ export function UpdateDecksForm({
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/decks").patch(body);
+      const res = await client.updateResource({
+        resource: Resources.Deck,
+        body,
+      });
       setIsFetching(false);
       router.refresh();
-      console.log(res);
     } catch (error) {
       setIsFetching(false);
       console.log(error);

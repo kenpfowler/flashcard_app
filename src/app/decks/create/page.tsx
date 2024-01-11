@@ -1,13 +1,17 @@
 import prisma from "@/lib/prisma";
 import { CreateDecksForm } from "./CreateDecksForm";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Subject } from "@/types/prisma";
 
 const CreateDecksPage = async ({ searchParams }: any) => {
   const { subject } = searchParams;
-  const subjects = await prisma.subject.findMany();
+  const res = (await client.getResources({
+    resource: Resources.Subject,
+  })) as Subject[];
 
   return (
     <div className="flex justify-center">
-      <CreateDecksForm subjects={subjects} subjectId={subject} />
+      <CreateDecksForm subjects={res} subjectId={subject} />
     </div>
   );
 };

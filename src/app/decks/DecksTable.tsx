@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Deck } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Deck } from "@/types/prisma";
+import { Resources, client } from "@/lib/dotnetApi";
 
 type DeckTableProps = {
   decks: Deck[];
@@ -13,9 +14,9 @@ const DeckTable = ({ decks }: DeckTableProps) => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    const res = await fetch("/api/decks", {
-      method: "DELETE",
-      body: JSON.stringify({ id }),
+    const res = await client.deleteResource({
+      resource: Resources.Deck,
+      body: id,
     });
   };
 
@@ -56,8 +57,8 @@ const DeckTable = ({ decks }: DeckTableProps) => {
               <td>{deck.id}</td>
               <td>{deck.name}</td>
               <td>{deck.description}</td>
-              <td>{deck.createdAt.toDateString()}</td>
-              <td>{deck.updatedAt.toDateString()}</td>
+              <td>{new Date(deck.createdAt).toDateString()}</td>
+              <td>{new Date(deck.updatedAt).toDateString()}</td>
               <td>{deck.imageUrl}</td>
               <td>
                 <Link href={`/decks/${deck.id}`}>Update</Link>
@@ -65,7 +66,7 @@ const DeckTable = ({ decks }: DeckTableProps) => {
               <td>
                 <Button
                   onClick={async () => {
-                    await handleDelete(deck.id.toString());
+                    await handleDelete(deck.id);
                     router.refresh();
                   }}
                   variant={"destructive"}

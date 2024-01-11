@@ -2,13 +2,18 @@ import prisma from "@/lib/prisma";
 import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateDecksForm } from "./UpdateDecksForm";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Deck, Subject } from "@/types/prisma";
 
 const UpdateDecksComponent = async ({ params }: WithParams) => {
-  const deck = await prisma.deck.findUnique({
-    where: { id: params.id },
-  });
+  const deck = (await client.getResource({
+    resource: Resources.Deck,
+    options: { dynamicSegment: params.id },
+  })) as Deck;
 
-  const subjects = await prisma.subject.findMany();
+  const subjects = (await client.getResources({
+    resource: Resources.Subject,
+  })) as Subject[];
 
   if (!deck) {
     notFound();
@@ -22,7 +27,7 @@ const UpdateDecksComponent = async ({ params }: WithParams) => {
     <div className="flex justify-center">
       <UpdateDecksForm
         id={params.id}
-        subjectId={deck.subjectId.toString()}
+        subjectId={deck.subjectId}
         subjects={subjects}
         name={deck.name}
         description={deck.description}

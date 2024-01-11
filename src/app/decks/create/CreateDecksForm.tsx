@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import api from "@/lib/api";
 import { useState } from "react";
 import {
   Select,
@@ -24,7 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { Subject } from "@prisma/client";
+import { Subject } from "@/types/prisma";
+import { Resources, client } from "@/lib/dotnetApi";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -69,7 +69,10 @@ export function CreateDecksForm({ subjects, subjectId }: CreateDecksFormProps) {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/decks").post(body);
+      const res = await client.createResource({
+        resource: Resources.Deck,
+        body,
+      });
       console.log(res);
       setIsFetching(false);
       form.reset();
