@@ -1,30 +1,24 @@
-import prisma from "@/lib/prisma";
 import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Card, Deck } from "@/types/prisma";
 import { UpdateCardsForm } from "./UpdateCardsForm";
 
 const UpdateCardsComponent = async ({ params }: WithParams) => {
-  const card = await prisma.card.findUnique({
-    where: { id: params.id },
-  });
+  const card = (await client.getResource({
+    resource: Resources.Card,
+    options: { dynamicSegment: params.id, params: { answers: "true" } },
+  })) as Card;
 
-  const subjects = await prisma.subject.findMany();
+  const decks = (await client.getResources({ resource: "deck" })) as Deck[];
 
   if (!card) {
     notFound();
   }
 
-  if (!subjects) {
-    throw Error("No subjects found");
-  }
-
   return (
     <div className="flex justify-center">
-      <UpdateCardsForm
-        id={params.id}
-        name={card.name}
-        imageUrl={card.imageUrl ?? ""}
-      />
+      <UpdateCardsForm card={card} decks={decks} />
     </div>
   );
 };

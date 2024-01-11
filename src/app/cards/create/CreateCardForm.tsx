@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import api from "@/lib/api";
+import { Resources, client } from "@/lib/dotnetApi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -22,31 +22,6 @@ type CreateCardFormProps = {
   deckId: string;
 };
 
-// model Card {
-//     id           String       @id @default(cuid())
-//     name         String
-//     questionType QuestionType @map("question_type")
-//     deckId       String       @map("deck_id")
-//     imageUrl     String?      @map("image_url")
-//     createdAt    DateTime     @default(now()) @map("created_at")
-//     updatedAt    DateTime     @updatedAt @map("updated_at")
-//     answers      Answer[]
-//     deck         Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
-
-//     @@map("card")
-//   }
-
-//   model Answer {
-//     id         String  @id @default(cuid())
-//     answerText String  @map("answer_text")
-//     isCorrect  Boolean
-//     cardId     String  @map("card_id")
-//     card       Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
-
-//     @@map("answer")
-//   }
-
-// I want to create a form schema that will have a dynamic field.  I don't know how many fields the user may create, but I do know their datatype.
 const formSchema = z.object({
   deckId: z.string().min(1, {
     message: "You must choose a deck",
@@ -105,7 +80,10 @@ export const CreateCardForm = ({ deckId }: CreateCardFormProps) => {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/cards").post(body);
+      const res = await client.createResource({
+        resource: Resources.Card,
+        body,
+      });
       console.log(res);
       setIsFetching(false);
       form.reset();

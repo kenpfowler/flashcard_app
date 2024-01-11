@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Card } from "@/types/prisma";
 
 type CardTableProps = {
   cards: Card[];
@@ -13,9 +14,9 @@ const CardTable = ({ cards }: CardTableProps) => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    const res = await fetch("/api/cards", {
-      method: "DELETE",
-      body: JSON.stringify({ id }),
+    const res = await client.deleteResource({
+      resource: Resources.Card,
+      body: id,
     });
   };
 
@@ -46,7 +47,6 @@ const CardTable = ({ cards }: CardTableProps) => {
             <th className="text-left">Id</th>
             <th className="text-left">Deck Id</th>
             <th className="text-left">name</th>
-            <th className="text-left">Question Type</th>
             <th className="text-left">Created</th>
             <th className="text-left">Updated</th>
             <th className="text-left">Image</th>
@@ -60,9 +60,8 @@ const CardTable = ({ cards }: CardTableProps) => {
               <td>{card.id}</td>
               <td>{card.deckId}</td>
               <td>{card.name}</td>
-              <td>{card.questionType}</td>
-              <td>{card.createdAt.toDateString()}</td>
-              <td>{card.updatedAt.toDateString()}</td>
+              <td>{new Date(card.createdAt).toDateString()}</td>
+              <td>{new Date(card.updatedAt).toDateString()}</td>
               <td>{card.imageUrl}</td>
               <td>
                 <Link href={`/cards/${card.id}`}>Update</Link>
@@ -70,7 +69,7 @@ const CardTable = ({ cards }: CardTableProps) => {
               <td>
                 <Button
                   onClick={async () => {
-                    await handleDelete(card.id.toString());
+                    await handleDelete(card.id);
                     router.refresh();
                   }}
                   variant={"destructive"}

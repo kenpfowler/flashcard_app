@@ -13,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import api from "@/lib/api";
 import { useState } from "react";
 import {
   Select,
@@ -23,8 +22,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { Deck } from "@prisma/client";
 import { Textarea } from "@/components/ui/textarea";
+import { client } from "@/lib/dotnetApi";
+import { Deck } from "@/types/prisma";
 
 const formSchema = z.object({
   questions: z.string().min(2, {
@@ -58,7 +58,7 @@ export function GenerateCardsForm({ decks }: GenerateCardFormProps) {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/cards/generate").post(body);
+      const res = await client._client.url("/api/cards/generate").post(body);
       setIsFetching(false);
       form.reset();
     } catch (error) {
