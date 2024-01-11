@@ -13,11 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import api from "@/lib/api";
 import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Resources, client } from "@/lib/dotnetApi";
 
 const formSchema = z.object({
   id: z.string(),
@@ -38,8 +38,6 @@ export function UpdateAnswersForm({
 }: UpdateAnswersFormProps) {
   const [isFetching, setIsFetching] = useState(false);
 
-  console.log({ id, answerText, isCorrect });
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,7 +56,10 @@ export function UpdateAnswersForm({
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/answers").patch(body);
+      const res = await client.updateResource({
+        resource: Resources.Answer,
+        body,
+      });
       console.log(res);
       setIsFetching(false);
       form.reset();

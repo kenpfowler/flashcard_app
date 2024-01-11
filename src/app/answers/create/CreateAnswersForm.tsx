@@ -13,10 +13,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import api from "@/lib/api";
 import { useState } from "react";
 
-import { Card } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -26,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card } from "@/types/prisma";
+import { Resources, client } from "@/lib/dotnetApi";
 
 const formSchema = z.object({
   answerText: z.string(),
@@ -60,7 +60,10 @@ export function CreateAnswersForm({ cards }: CreateAnswersFormProps) {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/answers").post(body);
+      const res = await client.createResource({
+        resource: Resources.Answer,
+        body: body,
+      });
       console.log(res);
       setIsFetching(false);
       form.reset();

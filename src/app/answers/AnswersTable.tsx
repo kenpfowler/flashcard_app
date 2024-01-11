@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Answer } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Answer } from "@/types/prisma";
 
 type AnswerTableProps = {
   answers: Answer[];
@@ -13,9 +14,9 @@ const AnswerTable = ({ answers }: AnswerTableProps) => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    const res = await fetch("/api/answers", {
-      method: "DELETE",
-      body: JSON.stringify({ id }),
+    const res = await client.deleteResource({
+      resource: Resources.Answer,
+      body: id,
     });
   };
 
@@ -61,7 +62,7 @@ const AnswerTable = ({ answers }: AnswerTableProps) => {
               <td>
                 <Button
                   onClick={async () => {
-                    await handleDelete(answer.id.toString());
+                    await handleDelete(answer.id);
                     router.refresh();
                   }}
                   variant={"destructive"}
