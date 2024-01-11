@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Subject } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Subject } from "@/types/prisma";
+import { Resources, client } from "@/lib/dotnetApi";
 
 type SubjectTableProps = {
   subjects: Subject[];
@@ -13,9 +14,9 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    const res = await fetch("/api/subjects/", {
-      method: "DELETE",
-      body: JSON.stringify({ id }),
+    const res = await client.deleteResource({
+      resource: Resources.Subject,
+      body: id,
     });
   };
 
@@ -56,8 +57,8 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
               <td>{subject.id}</td>
               <td>{subject.name}</td>
               <td>{subject.description}</td>
-              <td>{subject.createdAt.toDateString()}</td>
-              <td>{subject.updatedAt.toDateString()}</td>
+              <td>{new Date(subject.createdAt).toDateString()}</td>
+              <td>{new Date(subject.updatedAt).toDateString()}</td>
               <td>{subject.imageUrl}</td>
               <td>
                 <Link href={`/subjects/${subject.id}`}>Update</Link>
@@ -65,7 +66,7 @@ const SubjectTable = ({ subjects }: SubjectTableProps) => {
               <td>
                 <Button
                   onClick={async () => {
-                    await handleDelete(subject.id.toString());
+                    await handleDelete(subject.id);
                     router.refresh();
                   }}
                   variant={"destructive"}

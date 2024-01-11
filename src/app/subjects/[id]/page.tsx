@@ -1,12 +1,14 @@
-import prisma from "@/lib/prisma";
 import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateSubjectForm } from "./UpdateSubjectForm";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Subject } from "@/types/prisma";
 
-const UpdateSubjectsComponent = async ({ params }: WithParams) => {
-  const subject = await prisma.subject.findUnique({
-    where: { id: params.id },
-  });
+export default async function UpdateSubjectsComponent({ params }: WithParams) {
+  const subject = (await client.getResource({
+    resource: Resources.Subject,
+    options: { dynamicSegment: params.id },
+  })) as Subject;
 
   if (!subject) {
     notFound();
@@ -22,6 +24,4 @@ const UpdateSubjectsComponent = async ({ params }: WithParams) => {
       />
     </div>
   );
-};
-
-export default UpdateSubjectsComponent;
+}

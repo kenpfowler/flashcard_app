@@ -14,8 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import api from "@/lib/api";
 import { useState } from "react";
+import { Resources, client } from "@/lib/dotnetApi";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -50,12 +50,16 @@ export function CreateSubjectForm() {
 
     try {
       setIsFetching(true);
-      const res = await api.url("/api/subjects").post(body);
+      const res = await client.createResource({
+        resource: Resources.Subject,
+        body,
+      });
       setIsFetching(false);
       form.reset();
     } catch (error) {
-      setIsFetching(false);
       console.log(error);
+
+      setIsFetching(false);
     }
   };
 

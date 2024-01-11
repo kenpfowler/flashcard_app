@@ -1,8 +1,13 @@
-import prisma from "@/lib/prisma";
+import { Subject } from "@/types/prisma";
 import SubjectTable from "./SubjectTable";
+import { Resources, client } from "@/lib/dotnetApi";
+// Opt out of caching for all data requests in the route segment
+export const dynamic = "force-dynamic";
 
 export default async function SubjectsPage() {
-  const subjects = await prisma.subject.findMany();
+  const res = (await client.getResources({
+    resource: Resources.Subject,
+  })) as Subject[];
 
-  return <SubjectTable subjects={subjects} />;
+  return <SubjectTable subjects={res} />;
 }
