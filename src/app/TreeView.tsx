@@ -9,16 +9,25 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Resources, client } from "@/lib/dotnetApi";
+import { useState } from "react";
 
 export const BasicTree = ({ data }: any) => {
   return (
     <Tree
-      width={1000}
-      height={2000}
+      width={1200}
+      height={1000}
       initialData={data}
       openByDefault={false}
       disableDrag={true}
       disableDrop={true}
+      childrenAccessor={(node: any) => {
+        if (node.decks) {
+          return node.decks;
+        }
+
+        return node.cards;
+      }}
     >
       {Node}
     </Tree>
@@ -36,7 +45,7 @@ enum NodeType {
   Card = 2,
 }
 
-const nodes = ["subjects", "decks", "cards"];
+const nodes = [Resources.Subject, Resources.Deck, Resources.Card];
 
 /* This node instance can do many things. See the API reference. */
 function Node({
@@ -46,6 +55,7 @@ function Node({
   ...rest
 }: NodeRendererProps<TreeData>) {
   const router = useRouter();
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleDelete = async (id: string, type: NodeType) => {
     const isConfirmed = window.confirm(
@@ -53,10 +63,34 @@ function Node({
     );
 
     if (isConfirmed) {
-      const res = await fetch(`/api/${nodes[type]}`, {
-        method: "DELETE",
-        body: JSON.stringify({ id }),
+      const res = client.deleteResource({
+        resource: nodes[type],
+        body: id,
       });
+    }
+  };
+
+  const handleGenerate = async (
+    parentName: string | undefined,
+    deckName: string,
+    deckId: string
+  ) => {
+    if (!parentName) {
+      throw new Error("parent does not exist!");
+    }
+    try {
+      setIsFetching(true);
+      const res = client.getResource({
+        resource: Resources.Generations,
+        options: {
+          dynamicSegment: "generateMultipleChoiceCards",
+          params: { subject: parentName, deck: deckName, id: deckId },
+        },
+      });
+
+      setIsFetching(false);
+    } catch (error) {
+      setIsFetching(false);
     }
   };
 
@@ -112,10 +146,22 @@ function Node({
                   </Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/cards/generate`}>Generate Card</Link>
+                  <Button
+                    variant={"ghost"}
+                    className="w-full justify-start"
+                    onClick={async () => {
+                      await handleGenerate(
+                        node.parent?.data.name,
+                        node.data.name,
+                        node.id
+                      );
+                    }}
+                  >
+                    Generate Multiple Choice
+                  </Button>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/session?deck=${node.id}`}>Study Deck</Link>
+                  <Link href={`/session?deckId=${node.id}`}>Study Deck</Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
                   <Link href={`/decks/${node.id}`}>Edit Deck</Link>
