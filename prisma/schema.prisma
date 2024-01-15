@@ -2,156 +2,173 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider  = "postgresql"
-//   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-//   directUrl = env("POSTGRES_PRISMA_URL_NON_POOLING") // uses a direct connection
-// }
-
 datasource db {
   provider          = "postgresql"
   url               = env("LOCAL_POSTGRES_URL")
   shadowDatabaseUrl = env("LOCAL_SHADOW_DATABASE_URL")
 }
 
-model Account {
-  id                 String    @id @default(cuid())
-  userId             String    @map("user_id")
-  providerType       String    @map("provider_type")
-  providerId         String    @map("provider_id")
-  providerAccountId  String    @map("provider_account_id")
-  refreshToken       String?   @map("refresh_token")
-  accessToken        String?   @map("access_token")
-  accessTokenExpires DateTime? @map("access_token_expires")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
-  user               User      @relation(fields: [userId], references: [id])
+model Answers {
+  Id         String  @id(map: "PK_Answers") @db.Uuid
+  AnswerText String
+  CardId     String  @db.Uuid
+  IsCorrect  Boolean
+  Cards      Cards   @relation(fields: [CardId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Answers_Cards_CardId")
 
-  @@unique([providerId, providerAccountId])
-  @@map("account")
+  @@index([CardId], map: "IX_Answers_CardId")
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  userId       String   @map("user_id")
-  expires      DateTime
-  sessionToken String   @unique @map("session_token")
-  accessToken  String   @unique @map("access_token")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  user         User     @relation(fields: [userId], references: [id])
+model Cards {
+  Id        String      @id(map: "PK_Cards") @db.Uuid
+  DeckId    String      @db.Uuid
+  ImageUrl  String?
+  CreatedAt DateTime    @db.Timestamptz(6)
+  UpdatedAt DateTime    @db.Timestamptz(6)
+  Name      String
+  Answers   Answers[]
+  Decks     Decks       @relation(fields: [DeckId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Cards_Decks_DeckId")
+  Responses Responses[]
 
-  @@map("session")
+  @@index([DeckId], map: "IX_Cards_DeckId")
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  accounts      Account[]
-  sessions      Session[]
-  // Submission    Submission[]
+model Decks {
+  Id          String        @id(map: "PK_Decks") @db.Uuid
+  Description String?
+  ImageUrl    String?
+  CreatedAt   DateTime      @db.Timestamptz(6)
+  UpdatedAt   DateTime      @db.Timestamptz(6)
+  SubjectId   String        @db.Uuid
+  Name        String
+  Cards       Cards[]
+  Subjects    Subjects      @relation(fields: [SubjectId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Decks_Subjects_SubjectId")
+  Submissions Submissions[]
 
-  @@map("user")
+  @@index([SubjectId], map: "IX_Decks_SubjectId")
 }
 
-model VerificationRequest {
-  id         String   @id @default(cuid())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+model Responses {
+  Id              String      @id(map: "PK_Responses") @db.Uuid
+  SubmissionId    String      @db.Uuid
+  CardId          String      @db.Uuid
+  AnswerId        String      @db.Uuid
+  CorrectAnswerId String      @db.Uuid
+  Cards           Cards       @relation(fields: [CardId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Responses_Cards_CardId")
+  Submissions     Submissions @relation(fields: [SubmissionId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Responses_Submissions_SubmissionId")
 
-  @@unique([identifier, token])
-  @@map("verification_request")
+  @@index([CardId], map: "IX_Responses_CardId")
+  @@index([SubmissionId], map: "IX_Responses_SubmissionId")
 }
 
-model Subject {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  imageUrl    String?  @map("image_url")
-  children    Deck[]
-
-  @@map("subject")
+model Subjects {
+  Id          String   @id(map: "PK_Subjects") @db.Uuid
+  Description String?
+  CreatedAt   DateTime @db.Timestamptz(6)
+  UpdatedAt   DateTime @db.Timestamptz(6)
+  ImageUrl    String?
+  Name        String
+  Decks       Decks[]
 }
 
-model Deck {
-  id          String       @id @default(cuid())
-  name        String       @db.VarChar(255)
-  description String?      @db.VarChar(255)
-  imageUrl    String?      @map("image_url")
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  subjectId   String       @map("subject_id")
-  children    Card[]
-  subject     Subject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  Submission  Submission[]
+model Submissions {
+  Id        String      @id(map: "PK_Submissions") @db.Uuid
+  CreatedAt DateTime    @db.Timestamptz(6)
+  UpdatedAt DateTime    @db.Timestamptz(6)
+  DeckId    String      @db.Uuid
+  UserId    String?
+  Responses Responses[]
+  Decks     Decks       @relation(fields: [DeckId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Submissions_Decks_DeckId")
 
-  @@map("deck")
+  @@index([DeckId], map: "IX_Submissions_DeckId")
 }
 
-model Card {
-  id           String       @id @default(cuid())
-  name         String
-  questionType QuestionType @map("question_type")
-  deckId       String       @map("deck_id")
-  imageUrl     String?      @map("image_url")
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
-  answers      Answer[]
-  deck         Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  responses    Response[]
+model EFMigrationsHistory {
+  MigrationId    String @id(map: "PK___EFMigrationsHistory") @db.VarChar(150)
+  ProductVersion String @db.VarChar(32)
 
-  @@map("card")
+  @@map("__EFMigrationsHistory")
 }
 
-model Submission {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  deckId    String     @map("deck_id")
-  deck      Deck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  // userId    String     @map("user_id")
-  // user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  responses Response[]
-  userId    String?
+model AspNetRoleClaims {
+  Id          Int         @id(map: "PK_AspNetRoleClaims") @default(autoincrement())
+  RoleId      String
+  ClaimType   String?
+  ClaimValue  String?
+  AspNetRoles AspNetRoles @relation(fields: [RoleId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetRoleClaims_AspNetRoles_RoleId")
 
-  @@map("submission")
+  @@index([RoleId], map: "IX_AspNetRoleClaims_RoleId")
 }
 
-model Response {
-  id              String     @id @default(cuid())
-  submissionId    String     @map("submission_id")
-  submission      Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
-  cardId          String     @map("card_id")
-  card            Card       @relation(fields: [cardId], references: [id], onDelete: Cascade)
-  answerId        String     @map("answer_id")
-  correctAnswerId String     @map("correct_answer_id")
-
-  @@map("response")
+model AspNetRoles {
+  Id               String             @id(map: "PK_AspNetRoles")
+  Name             String?            @db.VarChar(256)
+  NormalizedName   String?            @unique(map: "RoleNameIndex") @db.VarChar(256)
+  ConcurrencyStamp String?
+  AspNetRoleClaims AspNetRoleClaims[]
+  AspNetUserRoles  AspNetUserRoles[]
 }
 
-model Answer {
-  id         String  @id @default(cuid())
-  answerText String  @map("answer_text")
-  isCorrect  Boolean
-  cardId     String  @map("card_id")
-  card       Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+model AspNetUserClaims {
+  Id          Int         @id(map: "PK_AspNetUserClaims") @default(autoincrement())
+  UserId      String
+  ClaimType   String?
+  ClaimValue  String?
+  AspNetUsers AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserClaims_AspNetUsers_UserId")
 
-  @@map("answer")
+  @@index([UserId], map: "IX_AspNetUserClaims_UserId")
 }
 
-enum QuestionType {
-  MC
-  TF
+model AspNetUserLogins {
+  LoginProvider       String
+  ProviderKey         String
+  ProviderDisplayName String?
+  UserId              String
+  AspNetUsers         AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserLogins_AspNetUsers_UserId")
 
-  @@map("question_type")
+  @@id([LoginProvider, ProviderKey], map: "PK_AspNetUserLogins")
+  @@index([UserId], map: "IX_AspNetUserLogins_UserId")
+}
+
+model AspNetUserRoles {
+  UserId      String
+  RoleId      String
+  AspNetRoles AspNetRoles @relation(fields: [RoleId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserRoles_AspNetRoles_RoleId")
+  AspNetUsers AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserRoles_AspNetUsers_UserId")
+
+  @@id([UserId, RoleId], map: "PK_AspNetUserRoles")
+  @@index([RoleId], map: "IX_AspNetUserRoles_RoleId")
+}
+
+model AspNetUserTokens {
+  UserId        String
+  LoginProvider String
+  Name          String
+  Value         String?
+  AspNetUsers   AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserTokens_AspNetUsers_UserId")
+
+  @@id([UserId, LoginProvider, Name], map: "PK_AspNetUserTokens")
+}
+
+model AspNetUsers {
+  Id                   String             @id(map: "PK_AspNetUsers")
+  UserName             String?            @db.VarChar(256)
+  NormalizedUserName   String?            @unique(map: "UserNameIndex") @db.VarChar(256)
+  Email                String?            @db.VarChar(256)
+  NormalizedEmail      String?            @db.VarChar(256)
+  EmailConfirmed       Boolean
+  PasswordHash         String?
+  SecurityStamp        String?
+  ConcurrencyStamp     String?
+  PhoneNumber          String?
+  PhoneNumberConfirmed Boolean
+  TwoFactorEnabled     Boolean
+  LockoutEnd           DateTime?          @db.Timestamptz(6)
+  LockoutEnabled       Boolean
+  AccessFailedCount    Int
+  AspNetUserClaims     AspNetUserClaims[]
+  AspNetUserLogins     AspNetUserLogins[]
+  AspNetUserRoles      AspNetUserRoles[]
+  AspNetUserTokens     AspNetUserTokens[]
+
+  @@index([NormalizedEmail], map: "EmailIndex")
 }
