@@ -94,12 +94,10 @@ export const UpdateCardsForm = ({ card, decks }: UpdateCardsFormProps) => {
         resource: Resources.Card,
         body: body,
       });
-      console.log(res);
       setIsFetching(false);
       form.reset();
     } catch (error) {
       setIsFetching(false);
-      console.log(error);
     }
   };
 

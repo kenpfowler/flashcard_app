@@ -62,8 +62,6 @@ export const SessionForm = ({ deck, correctAnswers }: SessionFormProps) => {
     // we might also want to have a new table called Report to store the results of completed study sessions
     // { cardId: string, answerId: string, correctAnswerId: string, userId: fk}[]
     try {
-      console.log({ body, deck, correctAnswers });
-
       setIsFetching(true);
       const res = await client.createResource({
         resource: Resources.Submission,
@@ -78,7 +76,6 @@ export const SessionForm = ({ deck, correctAnswers }: SessionFormProps) => {
 
       router.push(`/session/result?submission=${res}`);
     } catch (error) {
-      console.log(error);
       setIsFetching(false);
     }
   };

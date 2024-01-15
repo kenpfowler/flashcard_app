@@ -29,13 +29,6 @@ export default async function SessionPage({ searchParams }: WithSearchParams) {
     0
   );
 
-  console.log({
-    results,
-    numCorrect,
-    totalQuestions,
-    correctAnswerCount,
-  });
-
   return (
     <div className="flex flex-col justify-center items-center">
       <h1>Here are your results....</h1>

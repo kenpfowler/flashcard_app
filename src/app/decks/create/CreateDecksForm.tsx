@@ -73,12 +73,10 @@ export function CreateDecksForm({ subjects, subjectId }: CreateDecksFormProps) {
         resource: Resources.Deck,
         body,
       });
-      console.log(res);
       setIsFetching(false);
       form.reset();
     } catch (error) {
       setIsFetching(false);
-      console.log(error);
     }
   };
 

@@ -92,7 +92,6 @@ export function UpdateDecksForm({
       router.refresh();
     } catch (error) {
       setIsFetching(false);
-      console.log(error);
     }
   };
 

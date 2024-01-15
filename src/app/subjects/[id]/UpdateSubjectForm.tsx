@@ -76,7 +76,6 @@ export function UpdateSubjectForm({
       router.refresh();
     } catch (error) {
       setIsFetching(false);
-      console.log(error);
     }
   };
 

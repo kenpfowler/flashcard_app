@@ -60,11 +60,9 @@ export function UpdateAnswersForm({
         resource: Resources.Answer,
         body,
       });
-      console.log(res);
       setIsFetching(false);
       form.reset();
     } catch (error) {
-      console.log(error);
       setIsFetching(false);
     }
   };

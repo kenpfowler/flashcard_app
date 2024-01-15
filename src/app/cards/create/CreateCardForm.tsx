@@ -84,12 +84,10 @@ export const CreateCardForm = ({ deckId }: CreateCardFormProps) => {
         resource: Resources.Card,
         body,
       });
-      console.log(res);
       setIsFetching(false);
       form.reset();
     } catch (error) {
       setIsFetching(false);
-      console.log(error);
     }
   };
 
