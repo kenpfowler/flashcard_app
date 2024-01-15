@@ -1,6 +1,6 @@
 "use client";
 
-import { Submission } from "@prisma/client";
+import { Submission } from "@/types/prisma";
 import Link from "next/link";
 
 type SubmissionTableProps = {
@@ -24,12 +24,12 @@ const SubmissionTable = ({ submissions }: SubmissionTableProps) => {
         </thead>
         <tbody>
           {submissions.map((submission) => (
-            <tr>
+            <tr key={submission.id}>
               <td>{submission.id}</td>
               <td>{submission.deckId}</td>
               <td>{submission.userId}</td>
-              <td>{submission.createdAt.toDateString()}</td>
-              <td>{submission.updatedAt.toDateString()}</td>
+              <td>{new Date(submission.createdAt).toDateString()}</td>
+              <td>{new Date(submission.updatedAt).toDateString()}</td>
               <td>
                 <Link href={`/session/result?submission=${submission.id}`}>
                   View

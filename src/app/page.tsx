@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { SelectSessionForm } from "./SelectSessionForm";
-import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Subject } from "@/types/prisma";
 
 export default async function Home() {
-  const subjects = await prisma.subject.findMany({
-    include: { children: true },
-  });
+  const subjects = (await client.getResources({
+    resource: Resources.Subject,
+    options: { params: { decks: "true" } },
+  })) as Subject[];
 
   if (subjects.length === 0) {
     return (

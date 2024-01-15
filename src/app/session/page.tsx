@@ -1,35 +1,34 @@
-import prisma from "@/lib/prisma";
 import { SessionForm } from "./SessionForm";
 import { WithSearchParams } from "@/types/types";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Deck } from "@/types/prisma";
 
 export default async function SessionPage({ searchParams }: WithSearchParams) {
-  const { deck } = searchParams;
+  const { deckId } = searchParams;
 
-  if (!deck) {
+  if (!deckId) {
     return <h1>No flashcard session found!</h1>;
   }
 
-  const items = await prisma.card.findMany({
-    where: { deckId: deck },
-    include: { answers: true },
-  });
+  const deck = (await client.getResource({
+    resource: Resources.Deck,
+    options: {
+      dynamicSegment: deckId,
+      params: { cards: "true", answers: "true" },
+    },
+  })) as Deck;
 
-  const correctAnswers = items.map(
-    (item) => item.answers.find((answer) => answer.isCorrect)?.id ?? ""
-  );
-
-  if (items.length === 0) {
+  if (deck?.cards.length === 0) {
     return <h3>There are no flashcards to display</h3>;
   }
-  // The flashcards are being output individually, but I think I want to output the entire form at once.
+
+  const correctAnswers = deck.cards.map(
+    (card) => card.answers.find((answer) => answer.isCorrect)?.id ?? ""
+  );
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <SessionForm
-        items={items}
-        correctAnswers={correctAnswers}
-        deckId={deck}
-      />
+      <SessionForm deck={deck} correctAnswers={correctAnswers ?? []} />
     </div>
   );
 }

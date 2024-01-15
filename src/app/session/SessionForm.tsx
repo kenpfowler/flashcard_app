@@ -9,25 +9,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import api from "@/lib/api";
+import { Resources, client } from "@/lib/dotnetApi";
+import { Deck } from "@/types/prisma";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Answer, Card } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { object, z } from "zod";
+import { z } from "zod";
 
 type SessionFormProps = {
-  items: Array<Card & { answers: Array<Answer> }>;
+  deck: Deck;
   correctAnswers: Array<string>;
-  deckId: string;
 };
 
-export const SessionForm = ({
-  items,
-  correctAnswers,
-  deckId,
-}: SessionFormProps) => {
+export const SessionForm = ({ deck, correctAnswers }: SessionFormProps) => {
   const [isFetching, setIsFetching] = useState(false);
   const router = useRouter();
 
@@ -37,7 +32,7 @@ export const SessionForm = ({
 
   // We could...
   // lets call each user answer a submission.  They are aggregated as Array<string>
-  // we will need to have the correctAnswerId ordered as an array in the same order they appear in items
+  // we will need to have the correctAnswerId ordered as an array in the same order they appear in decks
   // const correctAnswers: String[] = [...answers]
 
   const formSchema = z.object({
@@ -47,18 +42,18 @@ export const SessionForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      responses: new Array(items.length).fill(""),
+      responses: new Array(deck.cards.length).fill(""),
     },
   });
 
   const submitSession = async (data: z.infer<typeof formSchema>) => {
     const body = {
       userId: "default",
-      deckId: deckId,
+      deckId: deck.id,
       responses: data.responses.map((response, index) => ({
         answerId: response,
         correctAnswerId: correctAnswers[index],
-        cardId: items[index].id,
+        cardId: deck.cards[index].id,
       })),
     };
 
@@ -67,8 +62,14 @@ export const SessionForm = ({
     // we might also want to have a new table called Report to store the results of completed study sessions
     // { cardId: string, answerId: string, correctAnswerId: string, userId: fk}[]
     try {
+      console.log({ body, deck, correctAnswers });
+
       setIsFetching(true);
-      const res = await api.url("/api/submissions").post(body);
+      const res = await client.createResource({
+        resource: Resources.Submission,
+        body,
+      });
+
       setIsFetching(false);
 
       if (typeof res !== "string") {
@@ -85,9 +86,9 @@ export const SessionForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submitSession)} className="space-y-8">
-        {items.map((item, index) => (
-          <div className="flex flex-col" key={item.id}>
-            <span>{item.name}</span>
+        {deck.cards.map((deck, index) => (
+          <div className="flex flex-col" key={deck.id}>
+            <span>{deck.name}</span>
             <FormField
               control={form.control}
               name={`responses.${index}`}
@@ -100,7 +101,7 @@ export const SessionForm = ({
                         onValueChange={field.onChange}
                         className="flex flex-col space-y-1"
                       >
-                        {item.answers.map((answer) => (
+                        {deck.answers.map((answer) => (
                           <FormItem
                             key={answer.id}
                             className="flex items-center space-x-3 space-y-0"

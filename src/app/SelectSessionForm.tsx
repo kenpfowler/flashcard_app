@@ -14,8 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Deck, Subject } from "@prisma/client";
-
 import {
   Select,
   SelectContent,
@@ -25,9 +23,10 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Deck, Subject } from "@/types/prisma";
 
 type SelectSessionFormProps = {
-  subjectsWithDecks: Array<Subject & { children: Array<Deck> }>;
+  subjectsWithDecks: Array<Subject & { decks: Array<Deck> }>;
 };
 
 export function SelectSessionForm({
@@ -57,7 +56,7 @@ export function SelectSessionForm({
   useEffect(() => {
     if (selectedSubjectId) {
       const selectableDecks = subjectsWithDecks
-        .map((item) => item.children)
+        .map((item) => item.decks)
         .flat()
         .filter((deck) => deck.subjectId.toString() === selectedSubjectId);
       setDecks(selectableDecks);
@@ -109,7 +108,7 @@ export function SelectSessionForm({
                   </FormControl>
                   <SelectContent>
                     {decks.map((item) => (
-                      <SelectItem key={item.id} value={item.id.toString()}>
+                      <SelectItem key={item.id} value={item.id}>
                         {item.name}
                       </SelectItem>
                     ))}
