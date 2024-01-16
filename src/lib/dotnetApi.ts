@@ -13,8 +13,8 @@ type ApiArgs = {
 
 const baseUrl =
   process.env.NODE_ENV === "production"
-    ? process.env.DOTNET_API_URL
-    : process.env.LOCAL_DOTNET_API_URL;
+    ? process.env.NEXT_PUBLIC_DOTNET_API_URL
+    : process.env.NEXT_PUBLIC_LOCAL_DOTNET_API_URL;
 
 if (typeof baseUrl === "undefined") {
   throw new Error("Could not retrieve base api url form env vars");
