@@ -11,13 +11,13 @@ type ApiArgs = {
   body?: any;
 };
 
-function tryGetBaseUrl() {
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? process.env.DOTNET_API_URL
-      : process.env.LOCAL_DOTNET_API_URL;
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.DOTNET_API_URL
+    : process.env.LOCAL_DOTNET_API_URL;
 
-  return baseUrl;
+if (typeof baseUrl === "undefined") {
+  throw new Error("Could not retrieve base api url form env vars");
 }
 
 class HttpClient {
@@ -130,5 +130,5 @@ export const client = new HttpClient({
     [Resources.Generations, "/api/generations"],
     [Resources.Submission, "/api/submission"],
   ]),
-  baseUrl: tryGetBaseUrl() ?? "",
+  baseUrl: baseUrl,
 });
