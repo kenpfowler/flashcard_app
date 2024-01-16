@@ -11,23 +11,28 @@ type ApiArgs = {
   body?: any;
 };
 
-let env: string | null = null;
+function tryGetBaseUrl() {
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.DOTNET_API_URL
+      : process.env.LOCAL_DOTNET_API_URL;
 
-if (process.env.NODE_ENV !== "production") {
-  env = "http://localhost:5034";
-} else {
-  env = "https://flashcardwebapi-production.up.railway.app";
+  if (typeof baseUrl === "undefined") {
+    throw new Error("Failed to retrieve api base url from env variables.");
+  }
+
+  return baseUrl;
 }
 
 class HttpClient {
   public _client;
-  private _root;
+  private _baseUrl;
   private _routes;
 
-  constructor(args: { routes: Map<string, string>; root: string }) {
+  constructor(args: { routes: Map<string, string>; baseUrl: string }) {
     this._routes = args.routes;
-    this._root = args.root;
-    this._client = wretch(this._root)
+    this._baseUrl = args.baseUrl;
+    this._client = wretch(this._baseUrl)
       .errorType("json")
       .resolve((r) => r.json());
   }
@@ -97,7 +102,7 @@ class HttpClient {
 
   public async deleteResource({ resource, options, body }: ApiArgs) {
     const route = this.tryParseUrl(resource, options);
-    const res = await fetch(`${env}${route}`, {
+    const res = await fetch(`${this._baseUrl}${route}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -129,5 +134,5 @@ export const client = new HttpClient({
     [Resources.Generations, "/api/generations"],
     [Resources.Submission, "/api/submission"],
   ]),
-  root: "http://localhost:5034",
+  baseUrl: tryGetBaseUrl(),
 });
