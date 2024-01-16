@@ -17,10 +17,6 @@ function tryGetBaseUrl() {
       ? process.env.DOTNET_API_URL
       : process.env.LOCAL_DOTNET_API_URL;
 
-  if (typeof baseUrl === "undefined") {
-    throw new Error("Failed to retrieve api base url from env variables.");
-  }
-
   return baseUrl;
 }
 
@@ -134,5 +130,5 @@ export const client = new HttpClient({
     [Resources.Generations, "/api/generations"],
     [Resources.Submission, "/api/submission"],
   ]),
-  baseUrl: tryGetBaseUrl(),
+  baseUrl: tryGetBaseUrl() ?? "",
 });
