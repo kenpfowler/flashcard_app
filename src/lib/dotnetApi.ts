@@ -1,7 +1,5 @@
 import wretch from "wretch";
 
-const env = "http://localhost:5034";
-
 type Options = {
   dynamicSegment?: string;
   params?: { [key: string]: string };
@@ -12,6 +10,14 @@ type ApiArgs = {
   options?: Options;
   body?: any;
 };
+
+let env: string | null = null;
+
+if (process.env.NODE_ENV !== "production") {
+  env = "http://localhost:5034";
+} else {
+  env = "https://flashcardwebapi-production.up.railway.app";
+}
 
 class HttpClient {
   public _client;
