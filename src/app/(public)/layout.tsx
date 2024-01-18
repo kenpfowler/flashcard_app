@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
-import "./globals.css";
+import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { ResizableView } from "./ResizableView";
-import AuthProvider from "../providers/AuthProvider";
-import { NavBar } from "./NavBar";
 import { Resources, client } from "@/lib/dotnetApi";
+import AuthProvider from "@/providers/AuthProvider";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +34,7 @@ export default async function RootLayout({
             fontSans.variable
           )}
         >
-          <NavBar />
-          <ResizableView tree={tree}>{children}</ResizableView>
+          {children}
           <Toaster />
         </body>
       </html>
