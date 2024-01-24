@@ -8,22 +8,19 @@ export const NavBar = () => {
     <nav className="flex px-10 py-5 items-center w-full">
       <ul className="flex space-x-2">
         <li>
-          <Link href={"/"}>Home</Link>
+          <Button asChild>
+            <Link href={"/dashboard"}>Dashboard</Link>
+          </Button>
         </li>
         <li>
-          <Link href={"/dashboard/submission"}>Submission</Link>
+          <Button asChild>
+            <Link href={"/register"}>Register</Link>
+          </Button>
         </li>
         <li>
-          <Link href={"/dashboard/subjects"}>Subjects</Link>
-        </li>
-        <li>
-          <Link href={"/dashboard/decks"}>Decks</Link>
-        </li>
-        <li>
-          <Link href={"/dashboard/cards"}>Cards</Link>
-        </li>
-        <li>
-          <Link href={"/dashboard/answers"}>Answers</Link>
+          <Button asChild>
+            <Link href={"/logout"}>Sign Out</Link>
+          </Button>
         </li>
         <li>
           <Button asChild>

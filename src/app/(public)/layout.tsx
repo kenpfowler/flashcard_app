@@ -3,9 +3,8 @@ import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { Resources, client } from "@/lib/dotnetApi";
-import AuthProvider from "@/providers/AuthProvider";
 import { PropsWithChildren } from "react";
+import { NavBar } from "./NavBar";
 
 export const dynamic = "force-dynamic";
 
@@ -20,21 +19,15 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const tree = (await client.getResources({ resource: Resources.Tree })) as [];
-
   return (
-    <AuthProvider>
-      <html className="dark" lang="en">
-        <body
-          className={cn(
-            "max-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >
-          {children}
-          <Toaster />
-        </body>
-      </html>
-    </AuthProvider>
+    <html className="dark" lang="en">
+      <body
+        className={cn("bg-background font-sans antialiased", fontSans.variable)}
+      >
+        <NavBar />
+        <main className="min-h-[calc(100vh_-_80px)]">{children}</main>
+        <Toaster />
+      </body>
+    </html>
   );
 }

@@ -161,7 +161,9 @@ function Node({
                   </Button>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/session?deckId=${node.id}`}>Study Deck</Link>
+                  <Link href={`/dashboard/session/result?deckId=${node.id}`}>
+                    Study Deck
+                  </Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
                   <Link href={`/decks/${node.id}`}>Edit Deck</Link>

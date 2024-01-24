@@ -24,6 +24,7 @@ class HttpClient {
   public _client;
   private _baseUrl;
   private _routes;
+  private _accessToken?: string;
 
   constructor(args: { routes: Map<string, string>; baseUrl: string }) {
     this._routes = args.routes;
@@ -31,6 +32,11 @@ class HttpClient {
     this._client = wretch(this._baseUrl)
       .errorType("json")
       .resolve((r) => r.json());
+  }
+
+  public setAuthorizationHeader(type: string, token: string) {
+    const tokenString = type + " " + token;
+    this._accessToken = tokenString;
   }
 
   private tryGetRoute(resource: string) {
@@ -70,7 +76,10 @@ class HttpClient {
 
   public async getResource({ resource, options }: ApiArgs) {
     const urlString = this.tryParseUrl(resource, options);
-    const res = await this._client.url(urlString).get();
+    const res = await this._client
+      .url(urlString)
+      .auth(this._accessToken ?? "")
+      .get();
     return res;
   }
 
@@ -81,18 +90,21 @@ class HttpClient {
   // could keep both for the different naming
   public async getResources({ resource, options }: ApiArgs) {
     const urlString = this.tryParseUrl(resource, options);
-    const res = await this._client.url(urlString).get();
+    const res = await this._client
+      .url(urlString)
+      .auth(this._accessToken ?? "")
+      .get();
     return res;
   }
   public async createResource({ resource, options, body }: ApiArgs) {
-    const route = this.tryParseUrl(resource, options);
-    const res = await this._client.url(route).post(body);
+    const urlString = this.tryParseUrl(resource, options);
+    const res = await this._client.url(urlString).post(body);
     return res;
   }
 
   public async updateResource({ resource, options, body }: ApiArgs) {
-    const route = this.tryParseUrl(resource, options);
-    const res = await this._client.url(route).patch(body);
+    const urlString = this.tryParseUrl(resource, options);
+    const res = await this._client.url(urlString).patch(body);
     return res;
   }
 
@@ -102,11 +114,48 @@ class HttpClient {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: this._accessToken ?? "",
       },
       body: JSON.stringify({ id: body }),
     });
 
     return res;
+  }
+
+  public async registerAccount(body: Record<string, string>) {
+    const res = await fetch(`${this._baseUrl}/account/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }).then((res) => {
+      if (!res.ok) {
+        throw Error("Failed to register");
+      }
+    });
+  }
+
+  public async loginAccount(body: Record<string, string>) {
+    const res = await fetch(`${this._baseUrl}/account/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      switch (res.status) {
+        case 401:
+          throw Error("Unauthorized");
+        default:
+          throw Error("Unknown error occurred");
+      }
+    }
+
+    const data = await res.json();
+    return data;
   }
 }
 
@@ -118,6 +167,7 @@ export enum Resources {
   Tree = "tree",
   Generations = "generations",
   Submission = "submission",
+  RegisterAccount = "register",
 }
 
 export const client = new HttpClient({
@@ -129,6 +179,7 @@ export const client = new HttpClient({
     [Resources.Tree, "/api/tree"],
     [Resources.Generations, "/api/generations"],
     [Resources.Submission, "/api/submission"],
+    [Resources.RegisterAccount, "/account/register"],
   ]),
   baseUrl: baseUrl,
 });
