@@ -1,6 +1,6 @@
 "use client";
 
-import { Submission } from "@/types/prisma";
+import { Submission } from "@/types/entities";
 import Link from "next/link";
 
 type SubmissionTableProps = {

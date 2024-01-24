@@ -1,7 +1,7 @@
 import { SessionForm } from "./SessionForm";
 import { WithSearchParams } from "@/types/types";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Deck } from "@/types/prisma";
+import { Deck } from "@/types/entities";
 
 export default async function SessionPage({ searchParams }: WithSearchParams) {
   const { deckId } = searchParams;

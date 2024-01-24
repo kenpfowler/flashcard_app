@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 
 const formSchema = z.object({
   id: z.string(),

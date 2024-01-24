@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 import { Resources, client } from "@/lib/dotnetApi";
 
 const formSchema = z.object({

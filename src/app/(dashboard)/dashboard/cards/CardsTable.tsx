@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Card } from "@/types/prisma";
+import { Card } from "@/types/entities";
 
 type CardTableProps = {
   cards: Card[];

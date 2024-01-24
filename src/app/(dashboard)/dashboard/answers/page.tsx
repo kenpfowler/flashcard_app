@@ -1,8 +1,6 @@
-import prisma from "@/lib/prisma";
-import CardsTable from "./AnswersTable";
 import AnswersTable from "./AnswersTable";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Answer } from "@/types/prisma";
+import { Answer } from "@/types/entities";
 
 const AnswersPage = async () => {
   const res = (await client.getResources({

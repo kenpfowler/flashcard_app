@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 import { Resources, client } from "@/lib/dotnetApi";
 
 type SubjectTableProps = {

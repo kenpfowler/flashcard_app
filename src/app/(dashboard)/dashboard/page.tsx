@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SelectSessionForm } from "./SelectSessionForm";
 import { Button } from "@/components/ui/button";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 
 export default async function Home() {
   const subjects = (await client.getResources({

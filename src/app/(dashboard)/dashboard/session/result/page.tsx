@@ -1,6 +1,6 @@
 import { Resources, client } from "@/lib/dotnetApi";
 import { cn } from "@/lib/utils";
-import { Submission } from "@/types/prisma";
+import { Submission } from "@/types/entities";
 import { WithSearchParams } from "@/types/types";
 
 export default async function SessionPage({ searchParams }: WithSearchParams) {

@@ -2,7 +2,7 @@ import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateAnswersForm } from "./UpdateAnswersForm";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Answer } from "@/types/prisma";
+import { Answer } from "@/types/entities";
 
 const UpdateCardsComponent = async ({ params }: WithParams) => {
   const answer = (await client.getResource({

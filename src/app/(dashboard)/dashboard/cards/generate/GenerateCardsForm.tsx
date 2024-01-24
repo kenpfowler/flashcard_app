@@ -24,7 +24,7 @@ import {
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
 import { client } from "@/lib/dotnetApi";
-import { Deck } from "@/types/prisma";
+import { Deck } from "@/types/entities";
 
 const formSchema = z.object({
   questions: z.string().min(2, {

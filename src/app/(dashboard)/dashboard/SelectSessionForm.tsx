@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Deck, Subject } from "@/types/prisma";
+import { Deck, Subject } from "@/types/entities";
 
 type SelectSessionFormProps = {
   subjectsWithDecks: Array<Subject & { decks: Array<Deck> }>;

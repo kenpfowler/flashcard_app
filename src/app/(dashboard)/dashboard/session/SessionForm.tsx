@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Deck } from "@/types/prisma";
+import { Deck } from "@/types/entities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

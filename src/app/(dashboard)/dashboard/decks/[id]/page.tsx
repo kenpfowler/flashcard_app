@@ -1,9 +1,8 @@
-import prisma from "@/lib/prisma";
 import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateDecksForm } from "./UpdateDecksForm";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Deck, Subject } from "@/types/prisma";
+import { Deck, Subject } from "@/types/entities";
 
 const UpdateDecksComponent = async ({ params }: WithParams) => {
   const deck = (await client.getResource({

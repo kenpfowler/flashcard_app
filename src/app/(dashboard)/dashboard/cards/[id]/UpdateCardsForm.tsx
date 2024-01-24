@@ -19,7 +19,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Card, Deck } from "@/types/prisma";
+import { Card, Deck } from "@/types/entities";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";

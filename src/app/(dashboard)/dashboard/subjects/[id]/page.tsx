@@ -2,7 +2,7 @@ import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { UpdateSubjectForm } from "./UpdateSubjectForm";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 
 export default async function UpdateSubjectsComponent({ params }: WithParams) {
   const subject = (await client.getResource({

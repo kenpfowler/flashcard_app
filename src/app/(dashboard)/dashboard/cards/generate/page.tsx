@@ -1,7 +1,6 @@
-import prisma from "@/lib/prisma";
 import { GenerateCardsForm } from "./GenerateCardsForm";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Deck } from "@/types/prisma";
+import { Deck } from "@/types/entities";
 
 const CreateCardsPage = async () => {
   const decks = (await client.getResources({

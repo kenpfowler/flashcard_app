@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card } from "@/types/prisma";
+import { Card } from "@/types/entities";
 import { Resources, client } from "@/lib/dotnetApi";
 
 const formSchema = z.object({

@@ -1,7 +1,6 @@
-import prisma from "@/lib/prisma";
 import { CreateDecksForm } from "./CreateDecksForm";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 
 const CreateDecksPage = async ({ searchParams }: any) => {
   const { subject } = searchParams;

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Deck } from "@/types/prisma";
+import { Deck } from "@/types/entities";
 import { Resources, client } from "@/lib/dotnetApi";
 
 type DeckTableProps = {

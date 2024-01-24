@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Answer } from "@/types/prisma";
+import { Answer } from "@/types/entities";
 
 type AnswerTableProps = {
   answers: Answer[];

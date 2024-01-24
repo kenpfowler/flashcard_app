@@ -1,7 +1,6 @@
-import prisma from "@/lib/prisma";
 import DeckTable from "./DecksTable";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Deck } from "@/types/prisma";
+import { Deck } from "@/types/entities";
 
 const DecksPage = async () => {
   const res = await client.getResources({ resource: Resources.Deck });

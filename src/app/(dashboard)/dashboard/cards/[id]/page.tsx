@@ -1,7 +1,7 @@
 import { WithParams } from "@/types/types";
 import { notFound } from "next/navigation";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Card, Deck } from "@/types/prisma";
+import { Card, Deck } from "@/types/entities";
 import { UpdateCardsForm } from "./UpdateCardsForm";
 
 const UpdateCardsComponent = async ({ params }: WithParams) => {

@@ -1,4 +1,3 @@
-import prisma from "@/lib/prisma";
 import { CreateCardForm } from "./CreateCardForm";
 import { WithSearchParams } from "@/types/types";
 

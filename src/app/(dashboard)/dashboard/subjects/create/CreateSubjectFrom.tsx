@@ -57,8 +57,6 @@ export function CreateSubjectForm() {
       setIsFetching(false);
       form.reset();
     } catch (error) {
-      console.log(error);
-
       setIsFetching(false);
     }
   };

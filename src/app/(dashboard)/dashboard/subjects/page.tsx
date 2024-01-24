@@ -1,4 +1,4 @@
-import { Subject } from "@/types/prisma";
+import { Subject } from "@/types/entities";
 import SubjectTable from "./SubjectTable";
 import { Resources, client } from "@/lib/dotnetApi";
 // Opt out of caching for all data requests in the route segment
