@@ -7,7 +7,6 @@ import { ResizableView } from "./ResizableView";
 import { Resources, client } from "@/lib/dotnetApi";
 import { NavBar } from "./NavBar";
 import { PropsWithChildren, Suspense } from "react";
-import { WithAuth } from "./WithAuth";
 import { getSession } from "@/app/(public)/login/action";
 import { redirect } from "next/navigation";
 
