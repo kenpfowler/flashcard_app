@@ -19,7 +19,7 @@ export async function Form() {
   return <LoginForm login={login} />;
 }
 
-function LogoutButton() {
+export async function LogoutButton() {
   return (
     <form action={logout}>
       <Button type="submit" value="logout">
