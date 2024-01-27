@@ -24,7 +24,15 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     redirect("/login");
   }
 
-  const tree = await client.getResources({ resource: Resources.Tree });
+  const tree = await client.getResources({
+    resource: Resources.Tree,
+    options: {
+      auth: client.getAuthorizationHeaderValue(
+        session.tokenType,
+        session.accessToken
+      ),
+    },
+  });
 
   return (
     <html className="dark" lang="en">

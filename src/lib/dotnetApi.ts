@@ -3,6 +3,7 @@ import wretch from "wretch";
 type Options = {
   dynamicSegment?: string;
   params?: { [key: string]: string };
+  auth?: string;
 };
 
 type ApiArgs = {
@@ -24,7 +25,6 @@ class HttpClient {
   public _client;
   private _baseUrl;
   private _routes;
-  private _accessToken?: string;
 
   constructor(args: { routes: Map<string, string>; baseUrl: string }) {
     this._routes = args.routes;
@@ -34,9 +34,9 @@ class HttpClient {
       .resolve((r) => r.json());
   }
 
-  public setAuthorizationHeader(type: string, token: string) {
-    const tokenString = type + " " + token;
-    this._accessToken = tokenString;
+  public getAuthorizationHeaderValue(tokenType: string, accessToken: string) {
+    const tokenString = tokenType + " " + accessToken;
+    return tokenString;
   }
 
   private tryGetRoute(resource: string) {
@@ -78,7 +78,7 @@ class HttpClient {
     const urlString = this.tryParseUrl(resource, options);
     const res = await this._client
       .url(urlString)
-      .auth(this._accessToken ?? "")
+      .auth(options?.auth ?? "")
       .get();
     return res;
   }
@@ -90,9 +90,10 @@ class HttpClient {
   // could keep both for the different naming
   public async getResources({ resource, options }: ApiArgs) {
     const urlString = this.tryParseUrl(resource, options);
+
     const res = await this._client
       .url(urlString)
-      .auth(this._accessToken ?? "")
+      .auth(options?.auth ?? "")
       .get();
     return res;
   }
@@ -114,7 +115,7 @@ class HttpClient {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: this._accessToken ?? "",
+        Authorization: options?.auth ?? "",
       },
       body: JSON.stringify({ id: body }),
     });
@@ -129,14 +130,40 @@ class HttpClient {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-    }).then((res) => {
-      if (!res.ok) {
-        throw Error("Failed to register");
-      }
     });
+
+    this.handleError(res);
   }
 
-  public async loginAccount(body: Record<string, string>) {
+  public async refreshAccessToken(body: Record<string, string>) {
+    const res = await fetch(`${this._baseUrl}/account/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    this.handleError(res);
+
+    const data = await res.json();
+    return data;
+  }
+
+  private handleError(res: Response) {
+    if (res.ok) {
+      return;
+    }
+
+    switch (res.status) {
+      case 401:
+        throw new Error("Unauthorized");
+      default:
+        throw new Error("Unknown error occurred");
+    }
+  }
+
+  public async loginUser(body: Record<string, string>) {
     const res = await fetch(`${this._baseUrl}/account/login`, {
       method: "POST",
       headers: {
@@ -145,14 +172,7 @@ class HttpClient {
       body: JSON.stringify(body),
     });
 
-    if (!res.ok) {
-      switch (res.status) {
-        case 401:
-          throw Error("Unauthorized");
-        default:
-          throw Error("Unknown error occurred");
-      }
-    }
+    this.handleError(res);
 
     const data = await res.json();
     return data;

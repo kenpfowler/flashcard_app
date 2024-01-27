@@ -4,15 +4,15 @@ import { defaultSession, sessionOptions } from "./lib";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-import { loginFormSchema } from "./LoginForm";
 import { client } from "@/lib/dotnetApi";
+import { loginFormSchema } from "./LoginForm";
+import { z } from "zod";
 
 /**
  * Attempts to create a session for the user
- * @returns Session
+ * @returns SessionData
  */
-export async function getSession(body?: { email: string; password: string }) {
+export async function getSession() {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
 
   // if the user is not currently logged in then we default the sessions values
@@ -25,23 +25,6 @@ export async function getSession(body?: { email: string; password: string }) {
     session.expiresIn = defaultSession.expiresIn;
   }
 
-  // now, we attempt to log the user in and create a new session
-  if (body) {
-    try {
-      const res = await client.loginAccount(body);
-      client.setAuthorizationHeader(res.tokenType, res.accessToken);
-      session.isLoggedIn = true;
-      session.email = body.email;
-      session.accessToken = res.accessToken;
-      session.refreshToken = res.refreshToken;
-      session.tokenType = res.tokenType;
-      session.expiresIn = res.expiresIn;
-    } catch (error) {
-      // FIXME: how should we deal with errors?
-      console.log(error);
-    }
-  }
-
   return session;
 }
 
@@ -52,8 +35,31 @@ export async function logout() {
 }
 
 export async function login(values: z.infer<typeof loginFormSchema>) {
-  const session = await getSession(values);
-  session.email = values.email ?? "No username";
-  await session.save();
-  revalidatePath("/login");
+  const session = await getSession();
+  // return the current session.  Since the user is not logged in this will be the default session
+
+  // attempt to login the user via the login api
+  try {
+    // retrieve and validate form input
+    const email = values.email;
+    const password = values.password;
+
+    if (!email || !password) {
+      throw Error("Could not retrieve credentials");
+    }
+
+    const res = await client.loginUser({ email, password });
+
+    session.isLoggedIn = true;
+    session.accessToken = res.accessToken;
+    session.email = email;
+    session.expiresIn = res.expiresIn;
+    session.refreshToken = res.refreshToken;
+    session.tokenType = res.tokenType;
+
+    await session.save();
+    revalidatePath("/login");
+  } catch (error) {
+    revalidatePath("/login");
+  }
 }

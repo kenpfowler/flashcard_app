@@ -3,11 +3,19 @@ import { SelectSessionForm } from "./SelectSessionForm";
 import { Button } from "@/components/ui/button";
 import { Resources, client } from "@/lib/dotnetApi";
 import { Subject } from "@/types/entities";
+import { getSession } from "@/app/(public)/login/action";
 
-export default async function Home() {
+export default async function Dashboard() {
+  const session = await getSession();
   const subjects = (await client.getResources({
     resource: Resources.Subject,
-    options: { params: { decks: "true" } },
+    options: {
+      params: { decks: "true" },
+      auth: client.getAuthorizationHeaderValue(
+        session.tokenType,
+        session.accessToken
+      ),
+    },
   })) as Subject[];
 
   if (subjects.length === 0) {
