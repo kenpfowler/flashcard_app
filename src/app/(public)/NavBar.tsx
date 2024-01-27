@@ -19,11 +19,6 @@ export const NavBar = () => {
         </li>
         <li>
           <Button asChild>
-            <Link href={"/logout"}>Sign Out</Link>
-          </Button>
-        </li>
-        <li>
-          <Button asChild>
             <Link href={"/login"}>Sign In</Link>
           </Button>
         </li>

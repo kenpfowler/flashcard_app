@@ -1,4 +1,4 @@
-import { getSession, login, logout } from "./action";
+import { getSession, login } from "./action";
 import { LoginForm } from "./LoginForm";
 import { LogoutButton } from "./LogoutButton";
 
