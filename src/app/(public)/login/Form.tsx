@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { getSession, login, logout } from "./action";
 import { LoginForm } from "./LoginForm";
+import { LogoutButton } from "./LogoutButton";
 
 export async function Form() {
   const session = await getSession();
@@ -17,14 +17,4 @@ export async function Form() {
   }
 
   return <LoginForm login={login} />;
-}
-
-export async function LogoutButton() {
-  return (
-    <form action={logout}>
-      <Button type="submit" value="logout">
-        Logout
-      </Button>
-    </form>
-  );
 }
