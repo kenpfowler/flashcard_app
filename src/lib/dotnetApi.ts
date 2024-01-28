@@ -188,6 +188,7 @@ export enum Resources {
   Generations = "generations",
   Submission = "submission",
   RegisterAccount = "register",
+  User = "user",
 }
 
 export const client = new HttpClient({
@@ -200,6 +201,7 @@ export const client = new HttpClient({
     [Resources.Generations, "/api/generations"],
     [Resources.Submission, "/api/submission"],
     [Resources.RegisterAccount, "/account/register"],
+    [Resources.User, "/api/user"],
   ]),
   baseUrl: baseUrl,
 });

@@ -5,6 +5,7 @@ import {
   Cards as GeneratedCards,
   Decks as GeneratedDecks,
   Submissions as GeneratedSubmissions,
+  AspNetUsers as GeneratedUsers,
 } from "./dbschema";
 
 type UncapitalizedKeys<T> = {
@@ -39,5 +40,7 @@ export type Submission = UncapitalizedKeys<GeneratedSubmissions> & {
 };
 
 export type Result = UncapitalizedKeys<GeneratedSubmissions>;
+
+export type User = UncapitalizedKeys<GeneratedUsers>;
 
 export type Tree = Subject;
