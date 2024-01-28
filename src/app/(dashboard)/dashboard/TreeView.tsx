@@ -16,7 +16,6 @@ export const BasicTree = ({ data }: any) => {
   return (
     <Tree
       width={1200}
-      height={1000}
       initialData={data}
       openByDefault={false}
       disableDrag={true}
@@ -106,12 +105,14 @@ function Node({
               <ContextMenuTrigger>{node.data.name}</ContextMenuTrigger>
               <ContextMenuContent>
                 <ContextMenuItem asChild>
-                  <Link href={`/decks/create?subject=${node.id}`}>
+                  <Link href={`/dashboard/decks/create?subject=${node.id}`}>
                     Add deck
                   </Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/subjects/${node.id}`}>Edit subject</Link>
+                  <Link href={`/dashboard/subjects/${node.id}`}>
+                    Edit subject
+                  </Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
                   <Button
@@ -141,7 +142,7 @@ function Node({
               <ContextMenuTrigger>{node.data.name}</ContextMenuTrigger>
               <ContextMenuContent>
                 <ContextMenuItem asChild>
-                  <Link href={`/cards/create?deck=${node.id}`}>
+                  <Link href={`/dashboard/cards/create?deck=${node.id}`}>
                     Create Card
                   </Link>
                 </ContextMenuItem>
@@ -166,7 +167,7 @@ function Node({
                   </Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
-                  <Link href={`/decks/${node.id}`}>Edit Deck</Link>
+                  <Link href={`/dashboard/decks/${node.id}`}>Edit Deck</Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
                   <Button
@@ -196,7 +197,7 @@ function Node({
               <ContextMenuTrigger>{node.data.name}</ContextMenuTrigger>
               <ContextMenuContent>
                 <ContextMenuItem asChild>
-                  <Link href={`/cards/${node.id}`}>Edit Card</Link>
+                  <Link href={`/dashboard/cards/${node.id}`}>Edit Card</Link>
                 </ContextMenuItem>
                 <ContextMenuItem asChild>
                   <Button

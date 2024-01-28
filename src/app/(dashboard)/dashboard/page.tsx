@@ -1,40 +1,25 @@
-import Link from "next/link";
-import { SelectSessionForm } from "./SelectSessionForm";
-import { Button } from "@/components/ui/button";
 import { Resources, client } from "@/lib/dotnetApi";
-import { Subject } from "@/types/entities";
-import { getSession } from "@/app/(public)/login/action";
+import { ResizableView } from "./ResizableView";
+import { PropsWithChildren } from "react";
+import { getSession } from "@/app/action";
 
-export default async function Dashboard() {
+export default async function Dashboard({ children }: PropsWithChildren) {
   const session = await getSession();
-  const subjects = (await client.getResources({
-    resource: Resources.Subject,
+
+  const tree = await client.getResources({
+    resource: Resources.Tree,
     options: {
-      params: { decks: "true" },
       auth: client.getAuthorizationHeaderValue(
         session.tokenType,
         session.accessToken
       ),
     },
-  })) as Subject[];
-
-  if (subjects.length === 0) {
-    return (
-      <main className="min-h-screen flex flex-col items-center justify-between p-24">
-        <div className="flex flex-col items-center space-y-2 justify-center ">
-          <h3>You haven&apos;t created and subjects to study.</h3>
-          <Button asChild>
-            <Link href={"/subjects/create"}>Create</Link>
-          </Button>
-        </div>
-      </main>
-    );
-  }
+  });
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-24">
+    <main className="min-h-screen flex flex-col items-center justify-between">
       <div className="flex flex-col items-center w-full">
-        <SelectSessionForm subjectsWithDecks={subjects} />
+        <ResizableView tree={tree}>{children}</ResizableView>
       </div>
     </main>
   );

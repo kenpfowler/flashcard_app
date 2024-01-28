@@ -1,13 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -40,7 +38,11 @@ export function LoginForm({ login }: LoginFormProps) {
   return (
     <Form {...form}>
       <form
-        action={async () => await form.handleAction(login)}
+        action={async () => {
+          setIsFetching(true);
+          await form.handleAction(login);
+          setIsFetching(false);
+        }}
         className="space-y-8"
       >
         <FormField
@@ -73,9 +75,7 @@ export function LoginForm({ login }: LoginFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">
-          {isFetching ? "Please Wait..." : "Create Account"}
-        </Button>
+        <Button type="submit">{isFetching ? "Please Wait..." : "Login"}</Button>
       </form>
     </Form>
   );

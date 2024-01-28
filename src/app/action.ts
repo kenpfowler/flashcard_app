@@ -1,12 +1,12 @@
 "use server";
-import { SessionData } from "./lib";
-import { defaultSession, sessionOptions } from "./lib";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { client } from "@/lib/dotnetApi";
-import { loginFormSchema } from "./LoginForm";
 import { z } from "zod";
+import { redirect } from "next/navigation";
+import { SessionData, defaultSession, sessionOptions } from "@/lib/session";
+import { loginFormSchema } from "./(public)/login/LoginForm";
 
 /**
  * Attempts to create a session for the user
@@ -32,6 +32,7 @@ export async function logout() {
   const session = await getSession();
   session.destroy();
   revalidatePath("/login");
+  redirect("/login");
 }
 
 export async function login(values: z.infer<typeof loginFormSchema>) {
@@ -58,7 +59,7 @@ export async function login(values: z.infer<typeof loginFormSchema>) {
     session.tokenType = res.tokenType;
 
     await session.save();
-    revalidatePath("/login");
+    redirect("/dashboard");
   } catch (error) {
     revalidatePath("/login");
   }

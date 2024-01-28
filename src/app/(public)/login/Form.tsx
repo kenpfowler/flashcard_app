@@ -1,6 +1,6 @@
-import { getSession, login } from "./action";
+import { getSession, login } from "../../action";
 import { LoginForm } from "./LoginForm";
-import { LogoutButton } from "./LogoutButton";
+import { LogoutButton } from "../../LogoutButton";
 
 export async function Form() {
   const session = await getSession();

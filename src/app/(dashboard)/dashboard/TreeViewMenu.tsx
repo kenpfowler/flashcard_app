@@ -15,7 +15,7 @@ export const TreeViewMenu = () => {
         <MenubarTrigger>New Subject</MenubarTrigger>
         <MenubarContent>
           <MenubarItem asChild>
-            <Link href={"/subjects/create"}>
+            <Link href={"/dashboard/subjects/create"}>
               Add Subject <MenubarShortcut>⌘T</MenubarShortcut>
             </Link>
           </MenubarItem>
