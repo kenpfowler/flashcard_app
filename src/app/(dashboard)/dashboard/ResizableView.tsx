@@ -9,10 +9,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-export const ResizableView = ({
-  children,
-  tree,
-}: ComponentWithChildren & { tree: any }) => {
+export const ResizableView = ({ tree }: { tree: any }) => {
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel>
@@ -22,9 +19,7 @@ export const ResizableView = ({
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel>
-        <div>{children}</div>
-      </ResizablePanel>
+      <ResizablePanel></ResizablePanel>
     </ResizablePanelGroup>
   );
 };

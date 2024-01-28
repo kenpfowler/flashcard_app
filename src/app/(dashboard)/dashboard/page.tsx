@@ -3,7 +3,7 @@ import { ResizableView } from "./ResizableView";
 import { PropsWithChildren } from "react";
 import { getSession } from "@/app/action";
 
-export default async function Dashboard({ children }: PropsWithChildren) {
+export default async function Dashboard() {
   const session = await getSession();
 
   const tree = await client.getResources({
@@ -19,7 +19,7 @@ export default async function Dashboard({ children }: PropsWithChildren) {
   return (
     <main className="min-h-screen flex flex-col items-center justify-between">
       <div className="flex flex-col items-center w-full">
-        <ResizableView tree={tree}>{children}</ResizableView>
+        <ResizableView tree={tree}></ResizableView>
       </div>
     </main>
   );
