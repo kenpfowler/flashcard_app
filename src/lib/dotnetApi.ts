@@ -1,3 +1,4 @@
+import { getSession } from "@/app/action";
 import wretch from "wretch";
 
 type Options = {
@@ -37,6 +38,15 @@ class HttpClient {
   public getAuthorizationHeaderValue(tokenType: string, accessToken: string) {
     const tokenString = tokenType + " " + accessToken;
     return tokenString;
+  }
+
+  private async getAuthHeader() {
+    const session = await getSession();
+    const authHeader = this.getAuthorizationHeaderValue(
+      session.tokenType,
+      session.accessToken
+    );
+    return authHeader;
   }
 
   private tryGetRoute(resource: string) {
@@ -148,6 +158,33 @@ class HttpClient {
 
     const data = await res.json();
     return data;
+  }
+
+  public async getUserInfo() {
+    const res = await fetch(`${this._baseUrl}/account/manage/info`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: await this.getAuthHeader(),
+      },
+    });
+
+    this.handleError(res);
+
+    const data = await res.json();
+    return data;
+  }
+
+  public async logout() {
+    const res = await fetch(`${this._baseUrl}/account/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: await this.getAuthHeader(),
+      },
+    });
+
+    this.handleError(res);
   }
 
   private handleError(res: Response) {

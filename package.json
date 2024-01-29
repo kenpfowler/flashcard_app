@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "typeGen": "pg-to-ts generate -c eval $(grep '^NODE_ENV' .env) -o ./src/types/dbschema.ts",
+    "typeGen": "pg-to-ts generate -c postgresql://postgres:postgres@localhost:5432/flashcard_db -o ./src/types/dbschema.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

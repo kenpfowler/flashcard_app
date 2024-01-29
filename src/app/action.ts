@@ -32,7 +32,6 @@ export async function logout() {
   const session = await getSession();
   session.destroy();
   revalidatePath("/login");
-  redirect("/login");
 }
 
 export async function login(values: z.infer<typeof loginFormSchema>) {
