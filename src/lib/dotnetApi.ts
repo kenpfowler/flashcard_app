@@ -161,7 +161,7 @@ class HttpClient {
   }
 
   public async getUserInfo() {
-    const res = await fetch(`${this._baseUrl}/account/manage/info`, {
+    const res = await fetch(`${this._baseUrl}/api/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
