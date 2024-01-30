@@ -41,6 +41,8 @@ export type Submission = UncapitalizedKeys<GeneratedSubmissions> & {
 
 export type Result = UncapitalizedKeys<GeneratedSubmissions>;
 
-export type User = UncapitalizedKeys<GeneratedUsers>;
+export type User = UncapitalizedKeys<
+  Pick<GeneratedUsers, "Email" | "EmailConfirmed" | "FirstName" | "LastName">
+>;
 
 export type Tree = Subject;
