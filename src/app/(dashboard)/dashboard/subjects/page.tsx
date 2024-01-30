@@ -5,9 +5,17 @@ import { Resources, client } from "@/lib/dotnetApi";
 export const dynamic = "force-dynamic";
 
 export default async function SubjectsPage() {
-  const res = (await client.getResources({
+  const res = await client.getResources<Subject[]>({
     resource: Resources.Subject,
-  })) as Subject[];
+  });
 
-  return <SubjectTable subjects={res} />;
+  if (!res.ok) {
+    return (
+      <div className="flex justify-center">
+        <p>{res.message}</p>
+      </div>
+    );
+  }
+
+  return <SubjectTable subjects={res.value} />;
 }

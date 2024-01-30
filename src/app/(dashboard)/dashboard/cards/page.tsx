@@ -3,11 +3,19 @@ import { Resources, client } from "@/lib/dotnetApi";
 import { Card } from "@/types/entities";
 
 const CardsPage = async () => {
-  const cards = (await client.getResources({
+  const res = await client.getResources<Card[]>({
     resource: Resources.Card,
-  })) as Card[];
+  });
 
-  return <CardsTable cards={cards} />;
+  if (!res.ok) {
+    return (
+      <div className="flex justify-center">
+        <p>{res.message}</p>
+      </div>
+    );
+  }
+
+  return <CardsTable cards={res.value} />;
 };
 
 export default CardsPage;

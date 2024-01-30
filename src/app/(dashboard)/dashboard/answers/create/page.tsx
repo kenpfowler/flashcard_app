@@ -3,13 +3,21 @@ import { Resources, client } from "@/lib/dotnetApi";
 import { Card } from "@/types/entities";
 
 const CreateAnswerPage = async () => {
-  const cards = (await client.getResources({
+  const result = await client.getResources<Card[]>({
     resource: Resources.Card,
-  })) as Card[];
+  });
+
+  if (!result.ok) {
+    return (
+      <div className="flex justify-center">
+        <p>{result.message}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center">
-      <CreateAnswersForm cards={cards} />
+      <CreateAnswersForm cards={result.value} />
     </div>
   );
 };

@@ -4,13 +4,21 @@ import { Subject } from "@/types/entities";
 
 const CreateDecksPage = async ({ searchParams }: any) => {
   const { subject } = searchParams;
-  const res = (await client.getResources({
+  const res = await client.getResources<Subject[]>({
     resource: Resources.Subject,
-  })) as Subject[];
+  });
+
+  if (!res.ok) {
+    return (
+      <div className="flex justify-center">
+        <p>{res.message}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center">
-      <CreateDecksForm subjects={res} subjectId={subject} />
+      <CreateDecksForm subjects={res.value} subjectId={subject} />
     </div>
   );
 };

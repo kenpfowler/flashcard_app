@@ -10,16 +10,20 @@ const UpdateDecksComponent = async ({ params }: WithParams) => {
     options: { dynamicSegment: params.id },
   })) as Deck;
 
-  const subjects = (await client.getResources({
+  const res = await client.getResources<Subject[]>({
     resource: Resources.Subject,
-  })) as Subject[];
+  });
+
+  if (!res.ok) {
+    return (
+      <div className="flex justify-center">
+        <p>{res.message}</p>
+      </div>
+    );
+  }
 
   if (!deck) {
     notFound();
-  }
-
-  if (!subjects) {
-    throw Error("No subjects found");
   }
 
   return (
@@ -27,7 +31,7 @@ const UpdateDecksComponent = async ({ params }: WithParams) => {
       <UpdateDecksForm
         id={params.id}
         subjectId={deck.subjectId}
-        subjects={subjects}
+        subjects={res.value}
         name={deck.name}
         description={deck.description}
         imageUrl={deck.imageUrl}

@@ -262,7 +262,7 @@ class HttpClient {
 
   public async loginUser(body: Record<string, string>) {
     const res = await fetch(`${this._baseUrl}/account/login`, {
-      method: "POST",
+      method: HttpMethod.Post,
       headers: {
         "Content-Type": "application/json",
       },
@@ -274,6 +274,14 @@ class HttpClient {
     const data = await res.json();
     return data;
   }
+}
+
+export enum HttpMethod {
+  Get = "GET",
+  Post = "POST",
+  Put = "PUT",
+  Patch = "PATCH",
+  Delete = "DELETE",
 }
 
 export enum Resources {
