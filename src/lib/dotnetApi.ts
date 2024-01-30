@@ -1,7 +1,6 @@
 import { getSession } from "@/app/action";
 import { User } from "@/types/entities";
 import { Result, createResultObject } from "@/types/types";
-import { ok } from "assert";
 import wretch from "wretch";
 
 type Options = {
@@ -194,6 +193,26 @@ class HttpClient {
 
     const data = await res.json();
     return data;
+  }
+
+  public async updateUserInfo(
+    body: Record<string, string>
+  ): Promise<Result<null>> {
+    try {
+      const res = await fetch(`${this._baseUrl}/api/user`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: await this.getAuthHeader(),
+        },
+        body: JSON.stringify(body),
+      });
+
+      this.handleFetchError(res);
+      return createResultObject(true, null);
+    } catch (e: unknown) {
+      return this.handleErrorResult(e);
+    }
   }
 
   public async getUserInfo(): Promise<Result<User>> {

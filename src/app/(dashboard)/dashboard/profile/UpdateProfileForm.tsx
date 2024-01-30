@@ -15,7 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Resources, client } from "@/lib/dotnetApi";
+import { client } from "@/lib/dotnetApi";
+import { toast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -59,29 +60,37 @@ export function UpdateProfileForm({
     },
   });
 
-  const updateDeck = async (values: z.infer<typeof formSchema>) => {
+  const updateUser = async (values: z.infer<typeof formSchema>) => {
     const body = {
       firstName: values.firstName,
       lastName: values.lastName,
     };
 
-    try {
-      setIsFetching(true);
-      const res = await client.updateResource({
-        resource: Resources.User,
-        body,
+    setIsFetching(true);
+    const result = await client.updateUserInfo(body);
+
+    if (result.ok) {
+      toast({
+        title: "Success",
+        description: "Profile updated",
       });
-      setIsFetching(false);
-      router.refresh();
-    } catch (error) {
-      setIsFetching(false);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
     }
+
+    setIsFetching(false);
+    setIsEditing(false);
+    router.refresh();
   };
 
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(updateDeck)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(updateUser)} className="space-y-8">
           <FormField
             disabled={!isEditing}
             control={form.control}
@@ -114,7 +123,7 @@ export function UpdateProfileForm({
 
           <FormField
             control={form.control}
-            disabled={!isEditing}
+            disabled
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -127,7 +136,7 @@ export function UpdateProfileForm({
             )}
           />
 
-          <div className="flex justify-between space-x-1">
+          <div className="flex justify-between space-x-2">
             <Button className="w-full" type="button" onClick={toggleEdit}>
               {isEditing ? "Cancel" : "Edit"}
             </Button>
