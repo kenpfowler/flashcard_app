@@ -13,3 +13,15 @@ export type ComponentWithChildren = {
 export type ComponentWithClassnames = {
   classNames?: string;
 };
+
+export type Result<T> =
+  | { ok: true; value: T }
+  | { ok: false; message?: string };
+
+export function createResultObject(ok: boolean, value?: any, message?: string) {
+  if (ok) {
+    return { ok, value: value };
+  }
+
+  return { ok, message: message };
+}

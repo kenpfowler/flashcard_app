@@ -7,6 +7,7 @@ import { SideNavigation } from "./SideNavigation";
 import { PropsWithChildren } from "react";
 import { redirect } from "next/navigation";
 import { getSession } from "@/app/action";
+import { Subject } from "@/types/entities";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     redirect("/login");
   }
 
-  const tree = await client.getResources({
+  const tree = await client.getResources<Subject>({
     resource: Resources.Tree,
     options: {
       auth: client.getAuthorizationHeaderValue(

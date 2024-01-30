@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { client } from "@/lib/dotnetApi";
 import { toast } from "@/components/ui/use-toast";
+import { Result } from "@/types/types";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -86,16 +87,10 @@ export function RegistrationForm() {
       password: values.password,
     };
 
-    try {
-      setIsFetching(true);
-      await client.registerAccount(body);
-      toast({
-        title: "Success",
-        description: "Account Created",
-      });
-      setIsFetching(false);
-      form.reset();
-    } catch (error) {
+    setIsFetching(true);
+    const result = await client.registerAccount(body);
+
+    if (!result.ok) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -103,7 +98,15 @@ export function RegistrationForm() {
       });
       setIsFetching(false);
       form.reset();
+      return;
     }
+
+    toast({
+      title: "Success",
+      description: "Account Created",
+    });
+    setIsFetching(false);
+    form.reset();
   };
 
   return (

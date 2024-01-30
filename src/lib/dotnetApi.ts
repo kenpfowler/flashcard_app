@@ -1,4 +1,7 @@
 import { getSession } from "@/app/action";
+import { User } from "@/types/entities";
+import { Result, createResultObject } from "@/types/types";
+import { ok } from "assert";
 import wretch from "wretch";
 
 type Options = {
@@ -98,15 +101,29 @@ class HttpClient {
   // SOLUTIONS:
   // could just delete
   // could keep both for the different naming
-  public async getResources({ resource, options }: ApiArgs) {
-    const urlString = this.tryParseUrl(resource, options);
+  public async getResources<T>({
+    resource,
+    options,
+  }: ApiArgs): Promise<Result<T>> {
+    try {
+      const urlString = this._baseUrl + this.tryParseUrl(resource, options);
+      const res = await fetch(urlString, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: options?.auth ?? "",
+        },
+      });
 
-    const res = await this._client
-      .url(urlString)
-      .auth(options?.auth ?? "")
-      .get();
-    return res;
+      this.handleFetchError(res);
+
+      const data = await res.json();
+      return { ok: true, value: data };
+    } catch (e: unknown) {
+      return this.handleErrorResult(e);
+    }
   }
+
   public async createResource({ resource, options, body }: ApiArgs) {
     const urlString = this.tryParseUrl(resource, options);
     const res = await this._client.url(urlString).post(body);
@@ -133,16 +150,35 @@ class HttpClient {
     return res;
   }
 
-  public async registerAccount(body: Record<string, string>) {
-    const res = await fetch(`${this._baseUrl}/account/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  public async registerAccount(
+    body: Record<string, string>
+  ): Promise<Result<null>> {
+    try {
+      const res = await fetch(`${this._baseUrl}/account/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
 
-    this.handleError(res);
+      this.handleFetchError(res);
+
+      return { ok: true, value: null };
+    } catch (error: unknown) {
+      return this.handleErrorResult(error);
+    }
+  }
+
+  private handleErrorResult(error: unknown): Result<never> {
+    if (error instanceof Error) {
+      return { ok: false, message: error.message };
+    }
+
+    return {
+      ok: false,
+      message: "Unknown error occurred",
+    };
   }
 
   public async refreshAccessToken(body: Record<string, string>) {
@@ -154,25 +190,28 @@ class HttpClient {
       body: JSON.stringify(body),
     });
 
-    this.handleError(res);
+    this.handleFetchError(res);
 
     const data = await res.json();
     return data;
   }
 
-  public async getUserInfo() {
-    const res = await fetch(`${this._baseUrl}/api/user`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: await this.getAuthHeader(),
-      },
-    });
+  public async getUserInfo(): Promise<Result<User>> {
+    try {
+      const res = await fetch(`${this._baseUrl}/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: await this.getAuthHeader(),
+        },
+      });
 
-    this.handleError(res);
-
-    const data = await res.json();
-    return data;
+      this.handleFetchError(res);
+      const data = await res.json();
+      return createResultObject(true, data);
+    } catch (e: unknown) {
+      return this.handleErrorResult(e);
+    }
   }
 
   public async logout() {
@@ -184,10 +223,10 @@ class HttpClient {
       },
     });
 
-    this.handleError(res);
+    this.handleFetchError(res);
   }
 
-  private handleError(res: Response) {
+  private handleFetchError(res: Response) {
     if (res.ok) {
       return;
     }
@@ -195,6 +234,8 @@ class HttpClient {
     switch (res.status) {
       case 401:
         throw new Error("Unauthorized");
+      case 500:
+        throw new Error("Internal Server error");
       default:
         throw new Error("Unknown error occurred");
     }
@@ -209,7 +250,7 @@ class HttpClient {
       body: JSON.stringify(body),
     });
 
-    this.handleError(res);
+    this.handleFetchError(res);
 
     const data = await res.json();
     return data;

@@ -11,8 +11,12 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Resources, client } from "@/lib/dotnetApi";
 import { useState } from "react";
+import { Subject } from "@/types/entities";
 
-export const BasicTree = ({ data }: any) => {
+type BasicTreeProps = {
+  data: Subject[];
+};
+export const BasicTree = ({ data }: BasicTreeProps) => {
   return (
     <Tree
       width={1200}
@@ -52,7 +56,7 @@ function Node({
   style,
   dragHandle,
   ...rest
-}: NodeRendererProps<TreeData>) {
+}: NodeRendererProps<Subject>) {
   const router = useRouter();
   const [isFetching, setIsFetching] = useState(false);
 

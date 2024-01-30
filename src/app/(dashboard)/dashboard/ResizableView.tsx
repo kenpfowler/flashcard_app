@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentWithChildren } from "@/types/types";
+import { ComponentWithChildren, Result } from "@/types/types";
 import { TreeViewMenu } from "./TreeViewMenu";
 import { BasicTree } from "./TreeView";
 import {
@@ -8,14 +8,23 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { Subject } from "@/types/entities";
 
-export const ResizableView = ({ tree }: { tree: any }) => {
+type ResizableViewProps = {
+  result: Result<Subject[]>;
+};
+
+export const ResizableView = ({ result }: ResizableViewProps) => {
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel>
         <div className="flex flex-col px-4 max-h-screen">
           <TreeViewMenu />
-          <BasicTree data={tree} />
+          {result.ok ? (
+            <BasicTree data={result.value} />
+          ) : (
+            <h1>Cannot Display Menu</h1>
+          )}
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />

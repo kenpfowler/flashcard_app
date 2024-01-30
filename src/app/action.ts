@@ -58,7 +58,7 @@ export async function login(values: z.infer<typeof loginFormSchema>) {
     session.tokenType = res.tokenType;
 
     await session.save();
-    redirect("/dashboard");
+    revalidatePath("/login");
   } catch (error) {
     revalidatePath("/login");
   }

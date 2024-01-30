@@ -2,11 +2,12 @@ import { Resources, client } from "@/lib/dotnetApi";
 import { ResizableView } from "./ResizableView";
 import { PropsWithChildren } from "react";
 import { getSession } from "@/app/action";
+import { Subject } from "@/types/entities";
 
 export default async function Dashboard() {
   const session = await getSession();
 
-  const tree = await client.getResources({
+  const result = await client.getResources<Subject[]>({
     resource: Resources.Tree,
     options: {
       auth: client.getAuthorizationHeaderValue(
@@ -19,7 +20,7 @@ export default async function Dashboard() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-between">
       <div className="flex flex-col items-center w-full">
-        <ResizableView tree={tree}></ResizableView>
+        <ResizableView result={result}></ResizableView>
       </div>
     </main>
   );
