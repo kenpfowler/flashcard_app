@@ -1,6 +1,5 @@
 import { LogoutButton } from "@/app/LogoutButton";
 import { client } from "@/lib/dotnetApi";
-import { User } from "@/types/entities";
 import { UpdateProfileForm } from "./UpdateProfileForm";
 import { Button } from "@/components/ui/button";
 
@@ -16,8 +15,6 @@ export default async function ProfilePage() {
       </main>
     );
   }
-
-  console.log(result.value);
 
   return (
     <main className="flex flex-col w-full items-center justify-center">
