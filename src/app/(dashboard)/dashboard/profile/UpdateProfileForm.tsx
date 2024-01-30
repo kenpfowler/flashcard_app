@@ -21,7 +21,6 @@ import { toast } from "@/components/ui/use-toast";
 const formSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
-  email: z.string().email(),
 });
 
 type UpdateProfileFormProps = {
@@ -45,7 +44,6 @@ export function UpdateProfileForm({
     } else {
       form.setValue("firstName", firstName ?? "");
       form.setValue("lastName", lastName ?? "");
-      form.setValue("email", email ?? "");
       setIsEditing(false);
     }
   };
@@ -56,7 +54,6 @@ export function UpdateProfileForm({
     defaultValues: {
       firstName: firstName ?? "",
       lastName: lastName ?? "",
-      email: email ?? "",
     },
   });
 
@@ -120,22 +117,14 @@ export function UpdateProfileForm({
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            disabled
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <Input
+              placeholder="Enter your email"
+              disabled
+              value={email ?? ""}
+            />
+          </FormItem>
           <div className="flex justify-between space-x-2">
             <Button className="w-full" type="button" onClick={toggleEdit}>
               {isEditing ? "Cancel" : "Edit"}

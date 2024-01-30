@@ -17,7 +17,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <main className="flex flex-col w-full items-center justify-center">
+    <main className="flex flex-col w-full items-center justify-center px-2">
       <div className="flex flex-col space-y-2">
         <h1 className="text-2xl">Welcome, {result.value.email}</h1>
         {result.value.emailConfirmed ? (
